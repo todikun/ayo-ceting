@@ -1,7 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\LoginController;
+use App\Http\Controllers\{
+    LoginController, 
+    EdukasiController,
+};
 
 /*
 |--------------------------------------------------------------------------
@@ -20,7 +23,8 @@ Route::post('login/proses', [LoginController::class, 'loginProses'])->name('logi
 Route::middleware('checkApiToken')->group(function() {
     Route::get('/', function () {
         return view('pages.dashboard');
-    });
+    })->name('dashboard');
 
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+    Route::resource('edukasi', EdukasiController::class);
 });

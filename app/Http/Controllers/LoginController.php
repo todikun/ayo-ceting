@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\{Http, Session};
 use Illuminate\Http\Client\RequestException;
 
 class LoginController extends Controller
@@ -27,10 +27,15 @@ class LoginController extends Controller
             ]);
 
             $body = $response->json();
-            if ($body['meta']['code'] == 200 && $body['data']['user']['role_id'] == 8) {
+            if ($body['meta']['code'] === 200 && $body['data']['user']['role_id'] === 8) {
                 $token = $body['data']['token'];
                 $cookie = cookie('api_token', $token, 60*24);
-                return redirect('/')->withCookie($cookie); 
+                $puskesmas = $body['data']['user']['puskesmas']['nama'];
+                Session::put('name', $puskesmas);
+
+                return redirect()->route('dashboard')
+                        ->withCookie($cookie)
+                        ->with('puskesmas', $puskesmas); 
             } else {
                 toastr()->error($body['meta']['message']);
                 return redirect()->route('login');
@@ -47,7 +52,9 @@ class LoginController extends Controller
     public function logout()
     {
         $forget_cookie = cookie()->forget('api_token');
-        $redirect = redirect()->route('login')->withCookie($forget_cookie);
+        $redirect = redirect()->route('login')
+                        ->withCookie($forget_cookie)
+                        ->with('logout', true);
         return $redirect;
     }
 }

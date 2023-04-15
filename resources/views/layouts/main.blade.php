@@ -19,6 +19,9 @@
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Nunito:300,300i,400,400i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i"
         rel="stylesheet">
 
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" />
+    <script type="text/javascript" src="//code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <!-- Vendor CSS Files -->
     <link href="{{asset('dist/vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('dist/vendor/bootstrap-icons/bootstrap-icons.css')}}" rel="stylesheet">
@@ -31,6 +34,9 @@
     <!-- Template Main CSS File -->
     <link href="{{asset('dist/css/style.css')}}" rel="stylesheet">
 
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    @stack('css')
     <!-- =======================================================
   * Template Name: NiceAdmin - v2.5.0
   * Template URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -56,8 +62,11 @@
     </aside><!-- End Sidebar-->
 
     <main id="main" class="main">
-
-        @yield('content')
+        <section class="section dashboard">
+            <div class="row">
+                @yield('content')
+            </div>
+        </section>
 
     </main><!-- End #main -->
 
@@ -74,14 +83,23 @@
     <script src="{{asset('dist/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{asset('dist/vendor/chart.js/chart.umd.js')}}"></script>
     <script src="{{asset('dist/vendor/echarts/echarts.min.js')}}"></script>
+    <script src="{{asset('dist/vendor/tinymce/tinymce.min.js')}}"></script>
     <script src="{{asset('dist/vendor/quill/quill.min.js')}}"></script>
     <script src="{{asset('dist/vendor/simple-datatables/simple-datatables.js')}}"></script>
-    <script src="{{asset('dist/vendor/tinymce/tinymce.min.js')}}"></script>
-    <script src="{{asset('dist/vendor/php-email-form/validate.js')}}"></script>
 
     <!-- Template Main JS File -->
     <script src="{{asset('dist/js/main.js')}}"></script>
 
+    @stack('script')
+
+    <script>
+        const user = document.querySelector('#user-logged');
+        
+        // get localStorage
+        const getSession = localStorage.getItem('session');
+        user.innerHTML = getSession;
+        
+    </script>
 </body>
 
 </html>

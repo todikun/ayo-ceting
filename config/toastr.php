@@ -24,8 +24,8 @@ return array(
     */
 
     'options' => array(
-        'extendedTimeOut' => 1000,
+        'extendedTimeOut' => 2500,
         'showDuration' => 300,
-        'timeOut' => 1000,
+        'timeOut' => 2500,
     ),
 );

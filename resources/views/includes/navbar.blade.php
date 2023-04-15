@@ -1,5 +1,5 @@
 <div class="d-flex align-items-center justify-content-between">
-    <a href="index.html" class="logo d-flex align-items-center">
+    <a href="{{route('dashboard')}}" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">AyoCeting</span>
     </a>
@@ -10,9 +10,7 @@
 
 <nav class="header-nav ms-auto pe-3">
     <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-        <img src="https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50" alt="Profile"
-            class="rounded-circle">
-        <span class="d-none d-md-block dropdown-toggle ps-2">Administrator</span>
+        <span class="d-none d-md-block dropdown-toggle ps-2" id="user-logged" title="Administrator"></span>
     </a>
 
     <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">

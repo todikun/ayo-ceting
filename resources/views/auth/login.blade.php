@@ -46,7 +46,7 @@
                         <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
 
                             <div class="d-flex justify-content-center py-4">
-                                <a href="index.html" class="logo d-flex align-items-center w-auto">
+                                <a href="#" class="logo d-flex align-items-center w-auto">
                                     <img src="assets/img/logo.png" alt="">
                                     <span class="d-none d-lg-block">AyoCeting</span>
                                 </a>
@@ -103,11 +103,12 @@
                             </div>
 
                             <div class="credits">
+                                Powered by <a href="#">DISKOMINFO KOTA PADANG</a>
                                 <!-- All the links in the footer should remain intact. -->
                                 <!-- You can delete the links only if you purchased the pro version. -->
                                 <!-- Licensing information: https://bootstrapmade.com/license/ -->
                                 <!-- Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/ -->
-                                Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+                                <!-- Designed by <a href="https://bootstrapmade.com/">BootstrapMade</a> -->
                             </div>
 
                         </div>
@@ -124,6 +125,7 @@
 
     <!-- Vendor JS Files -->
     <script src="{{asset('dist/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{asset('dist/vendor/tinymce/tinymce.min.js')}}"></script>
 
     <!-- Template Main JS File -->
     <script src="{{asset('dist/js/main.js')}}"></script>
@@ -141,6 +143,12 @@
                 }
             });
         });
+
+        // remove localStorage
+        const logout = @json(session('logout'));
+        if (logout == true) {
+            localStorage.removeItem('session');
+        }
     </script>
 </body>
 
