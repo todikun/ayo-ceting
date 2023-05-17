@@ -17,10 +17,11 @@ class CheckApiToken
     public function handle(Request $request, Closure $next)
     {
         if ($request->hasCookie('api_token')) {
-            $token = $request->cookie('api_token');
             return $next($request);
         } else {
             return redirect('/login'); 
         }
+
+        // return $next($request);
     }
 }

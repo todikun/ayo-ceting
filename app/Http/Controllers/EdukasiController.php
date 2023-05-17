@@ -15,12 +15,12 @@ class EdukasiController extends Controller
      */
     public function index(Request $request)
     {
-        $url = 'http://103.134.154.169:5000/edukasi/puskesmas';
+        $url = env('API_URL').'edukasi';
         $body = get_data_api($url, $request->cookie('api_token'));
 
         return view('pages.edukasi.index', [
-            'puskesmas' => $body['data']['puskesmas'],
-            'edukasi' => $body['data']['edukasi'],
+            'puskesmas' => $body['data']['puskesmas'] ?? '',
+            'edukasi' => $body['data']['edukasi'] ?? [],
         ]);
     }
 
@@ -47,7 +47,7 @@ class EdukasiController extends Controller
             'isi' => 'required',
         ]);
 
-        $url = 'http://103.134.154.169:5000/edukasi';
+        $url = env('API_URL').'edukasi';
         $data = [
             'judul' => $request->judul,
             'isi' => $request->isi,
@@ -73,7 +73,7 @@ class EdukasiController extends Controller
      */
     public function show(Request $request, $id)
     {
-        $url = 'http://103.134.154.169:5000/edukasi/'.$id;
+        $url = env('API_URL').'edukasi/'.$id;
         $body = get_data_api($url, $request->cookie('api_token'));
 
         return view('pages.edukasi.show', [
@@ -89,7 +89,7 @@ class EdukasiController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $url = 'http://103.134.154.169:5000/edukasi/'.$id;
+        $url = env('API_URL').'edukasi/'.$id;
         $body = get_data_api($url, $request->cookie('api_token'));
 
         return view('pages.edukasi.edit', [
@@ -111,7 +111,7 @@ class EdukasiController extends Controller
             'isi' => 'required',
         ]);
 
-        $url = 'http://103.134.154.169:5000/edukasi/'.$id;
+        $url = env('API_URL').'edukasi/'.$id;
         $data = [
             'judul' => $request->judul,
             'isi' => $request->isi,
@@ -136,7 +136,7 @@ class EdukasiController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $url = 'http://103.134.154.169:5000/edukasi/'.$id;
+        $url = env('API_URL').'edukasi/'.$id;
         $body = delete_data_api($url, $request->cookie('api_token'));
         
         if ($body['meta']['code'] === 200) {
