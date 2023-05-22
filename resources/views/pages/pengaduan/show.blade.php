@@ -1,33 +1,57 @@
-<div class="col-lg">
-    <!-- Vertical Form -->
-    <form class="row g-3">
-        <div class="mb-3">
-            <span class="badge bg-warning text-small text-dark">
-                {{$pengajuan['category_pengajuan']['category_name']}}
-            </span>
-            <span class="badge bg-secondary text-small">
-                {{Carbon\Carbon::parse($pengajuan['created_at'])->locale('id')->translatedFormat('j
-                F Y')}}
-            </span>
+<div class="col-lg
+">
+    <form action="#">
+
+        <div class="row mb-3">
+            <div class="badge bg-warning text-white">{{$pengajuan['category_pengajuan']['category_name']}}</div>
         </div>
-        <div class="col-12">
-            <label for="pelapor" class="form-label">Pelapor</label>
-            <input type="text" class="form-control" value="{{$pengajuan['user']['name']}}" id="pelapor">
+        <div class="row d-flex mb-3">
+            <div class="col-4">
+                Tanggal
+            </div>
+
+            <div>
+                : {{\Carbon\Carbon::parse($pengajuan['created_at'])->locale('id')->translatedFormat('j F Y')}}
+            </div>
         </div>
-        <div class="col-12">
-            <label for="nohp" class="form-label">No.HP</label>
-            <input type="text" class="form-control" value="{{$pengajuan['user']['phone_number']}}" id="nohp">
+
+        <div class="row d-flex mb-3">
+            <div class="col-4">
+                Pelapor
+            </div>
+
+            <div>
+                : {{$pengajuan['user']['name']}}
+            </div>
         </div>
-        <div class="col-12">
-            <label for="alamat_lengkap" class="form-label">Alamat Lengkap</label>
-            <textarea id="alamat_lengkap" class="form-control" cols="5"
-                rows="2">{{$pengajuan['alamat_lengkap']}}</textarea>
+
+        <div class="row d-flex mb-3">
+            <div class="col-4">
+                No.Hp
+            </div>
+
+            <div>
+                : {{$pengajuan['user']['phone_number']}}
+            </div>
         </div>
-        <div class="col-12">
-            <label for="isi_pengajuan" class="form-label">Isi Pengajuan</label>
-            <textarea id="isi_pengajuan" class="form-control" cols="5"
-                rows="3">{{$pengajuan['isi_pengajuan']}}</textarea>
+
+        <div class="row d-flex mb-3">
+            <div class="col-4">
+                Alamat lengkap
+            </div>
+
+            <div>
+                : {{$pengajuan['alamat_lengkap']}}
+            </div>
+        </div>
+
+        <div class="row d-flex mb-3">
+            <div class="col-4">
+                Isi pengaduan
+            </div>
+            <div>
+                : {{$pengajuan['isi_pengajuan']}}
+            </div>
         </div>
     </form>
-    <!-- Vertical Form -->
 </div>

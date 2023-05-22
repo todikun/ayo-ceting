@@ -33,7 +33,7 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$item['user']['name']}}</td>
-                            <td>{{$item['category']['category_name']}}</td>
+                            <td>{{$item['category_pengajuan']['category_name']}}</td>
                             <td>{{$item['isi_pengajuan']}}</td>
                             <td>
                                 {{\Carbon\Carbon::parse($item['created_at'])->locale('id')->translatedFormat('j F Y')}}
@@ -46,8 +46,8 @@
                             </td>
                             <td>
 
-                                <a href="{{route('konsultasi.message', $item['id'])}}" class="btn btn-primary"
-                                    title="Konsultasi">
+                                <a href="{{route('konsultasi.message', ['pengaduanId'=>$item['id'], 'userIdPengaduan'=>$item['user_id']])}}"
+                                    class="btn btn-primary" title="Konsultasi">
                                     <i class="fas fa-comments"></i>
                                 </a>
 

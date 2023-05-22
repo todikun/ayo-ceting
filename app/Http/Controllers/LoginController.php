@@ -40,8 +40,8 @@ class LoginController extends Controller
                             ->withCookie($cookie)
                             ->with(
                                 [
-                                    'userId' => $userId,
                                     'name' => $name,
+                                    'isLogin' => true,
                                 ]
                             );
             } else {

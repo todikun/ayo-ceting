@@ -22,7 +22,7 @@
                             <th width="1%">#</th>
                             <th scope="col">NAMA</th>
                             <th scope="col">KATEGORI</th>
-                            <th scope="col">ISI PENGAJUAN</th>
+                            <th scope="col">ISI PENGADUAN</th>
                             <th scope="col">TANGGAL</th>
                             <th scope="col">STATUS</th>
                             <th scope="col">_ACTION</th>
@@ -33,36 +33,39 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$item['user']['name']}}</td>
-                            <td>{{$item['category']['category_name']}}</td>
+                            <td>{{$item['category_pengajuan']['category_name']}}</td>
                             <td>{{$item['isi_pengajuan']}}</td>
                             <td>
                                 {{\Carbon\Carbon::parse($item['created_at'])->locale('id')->translatedFormat('j F Y')}}
                             </td>
                             <td>
-                                <span class="badge badge-secondary">
+                                <span class="badge badge-light">
                                     {{$item['status']}}
                                 </span>
                             </td>
                             <td>
+                                <div class="btn-group">
 
-                                <a href="{{route('pengaduan.show', $item['id'])}}"
-                                    data-approve="{{route('approve.update', $item['id'])}}"
-                                    data-reject="{{route('reject.update', $item['id'])}}"
-                                    class="btn btn-sm btn-detail btn-dark" title="Detail">
-                                    <i class="ri-eye-line"></i>
-                                </a>
+                                    <a href="{{route('pengaduan.show', $item['id'])}}"
+                                        data-approve="{{route('approve.update', $item['id'])}}"
+                                        data-reject="{{route('reject.update', $item['id'])}}"
+                                        class="btn btn-sm btn-detail btn-dark" title="Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
 
-                                <a href="{{route('approve.update', $item['id'])}}" class="btn btn-sm btn-success"
-                                    title="Approve"
-                                    onclick="return confirm('Apakah anda yakin approve pengajuan ini?')">
-                                    <i class="ri-check-fill"></i>
-                                </a>
+                                    <a href="{{route('approve.update', $item['id'])}}" class="btn btn-sm btn-success"
+                                        title="Approve"
+                                        onclick="return confirm('Apakah anda yakin approve pengajuan ini?')">
+                                        <i class="fas fa-check"></i>
+                                    </a>
 
-                                <a href="{{route('reject.update', $item['id'])}}" class="btn btn-sm btn-warning"
-                                    title="Reject" onclick="return confirm('Apakah anda yakin reject pengajuan ini?')">
-                                    <i class="ri-close-fill"></i>
-                                </a>
+                                    <a href="{{route('reject.update', $item['id'])}}" class="btn btn-sm btn-warning"
+                                        title="Reject"
+                                        onclick="return confirm('Apakah anda yakin reject pengajuan ini?')">
+                                        <i class="fas fa-times"></i>
+                                    </a>
 
+                                </div>
                             </td>
                         <tr>
                             @empty

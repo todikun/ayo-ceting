@@ -1,15 +1,16 @@
 <?php 
 
+use Firebase\JWT\{JWT, Key};
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
 if (!function_exists('get_data_api')) {
 
-    function get_data_api($url, $cookie)
+    function get_data_api($url, $token)
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $cookie,
+                'Authorization' => 'Bearer ' . $token,
             ])->get($url);
 
             $body = $response->json();
@@ -28,11 +29,11 @@ if (!function_exists('get_data_api')) {
 
 if (!function_exists('post_data_api')) {
 
-    function post_data_api($url, $cookie, $data)
+    function post_data_api($url, $token, $data)
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $cookie,
+                'Authorization' => 'Bearer ' . $token,
             ])->post($url, $data);
 
             $body = $response->json();
@@ -50,11 +51,11 @@ if (!function_exists('post_data_api')) {
 
 if (!function_exists('put_data_api')) {
     
-    function put_data_api($url, $cookie, $data = null)
+    function put_data_api($url, $token, $data = null)
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $cookie,
+                'Authorization' => 'Bearer ' . $token,
             ])->put($url, $data);
 
             $body = $response->json();
@@ -74,11 +75,11 @@ if (!function_exists('put_data_api')) {
 
 if (!function_exists('delete_data_api')) {
     
-    function delete_data_api($url, $cookie)
+    function delete_data_api($url, $token)
     {
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $cookie,
+                'Authorization' => 'Bearer ' . $token,
             ])->delete($url);
 
             $body = $response->json();
@@ -96,32 +97,15 @@ if (!function_exists('delete_data_api')) {
     
 }
 
-if (!function_exists('filter_data_by_status')) {
+if (!function_exists('decode_jwt_token')) {
     
-    function filter_data_by_status($data, $status = null)
+    function decode_jwt_token($token)
     {
-        if ($status == 'pending') {
-            $result = array_filter($data['data'], function($item) {
-                return $item['status'] == 'pending';
-            });
-        } else if ($status == 'approved'){
-            $result = array_filter($data['data'], function($item) {
-                return $item['status'] == 'approved';
-            });
-        } else if ($status == 'rejected'){
-            $result = array_filter($data['data'], function($item) {
-                return $item['status'] == 'rejected';
-            });
-        } else if ($status == 'selesai'){
-            $result = array_filter($data['data'], function($item) {
-                return $item['status'] == 'selesai';
-            });
-        } else {
-            $result = array_filter($data['data'], function($item) {
-                return $item['status'] != 'pending';
-            });
+        try {
+            $decoded = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
+            return $decoded;
+        } catch (\Exception $e) {
+            return $e->getMessage();
         }
-
-        return array_values($result);
     }
 }

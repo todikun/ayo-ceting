@@ -87,13 +87,10 @@
     <script src="{{asset('dist/js/scripts.js')}}"></script>
     <script src="{{asset('dist/js/custom.js')}}"></script>
 
-    <!-- Page Specific JS File -->
-    @stack('script')
-
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            if (localStorage.getItem('userId') === null || localStorage.getItem('name') === null) {
-                localStorage.setItem('userId', "{{Session::get('userId')}}");
+            let session = "{{Session::get('isLogin')}}";
+            if (session == true) {
                 localStorage.setItem('name', "{{Session::get('name')}}");
             }
 
@@ -107,6 +104,9 @@
 
 
     </script>
+
+    <!-- Page Specific JS File -->
+    @stack('script')
 </body>
 
 </html>

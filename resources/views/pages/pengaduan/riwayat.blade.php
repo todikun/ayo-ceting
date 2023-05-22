@@ -22,7 +22,7 @@
                             <th width="1%">#</th>
                             <th scope="col">NAMA</th>
                             <th scope="col">KATEGORI</th>
-                            <th scope="col">ISI PENGAJUAN</th>
+                            <th scope="col">ISI PENGADUAN</th>
                             <th scope="col">TANGGAL</th>
                             <th scope="col">STATUS</th>
                         </tr>
@@ -32,7 +32,7 @@
                         <tr>
                             <td>{{$loop->iteration}}</td>
                             <td>{{$item['user']['name']}}</td>
-                            <td>{{$item['category']['category_name']}}</td>
+                            <td>{{$item['category_pengajuan']['category_name']}}</td>
                             <td>{{$item['isi_pengajuan']}}</td>
                             <td>
                                 {{\Carbon\Carbon::parse($item['created_at'])->locale('id')->translatedFormat('j F Y')}}

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
@@ -19,11 +20,25 @@ class DashboardController extends Controller
 
         $approved = $this->filterByStatus($body, 'approved');
         $rejected = $this->filterByStatus($body, 'rejected');
+
+        // filter by this month
+        $month = Carbon::now()->month;
+        $year = Carbon::now()->year;
+
+        $approvedMonth = array_filter($approved, function($item) use ($month, $year) {
+            $date = Carbon::parse($item['created_at']);
+            return $date->month == $month && $date->year == $year;
+        });
+
+        $rejectedMonth = array_filter($rejected, function($item) use ($month, $year) {
+            $date = Carbon::parse($item['created_at']);
+            return $date->month == $month && $date->year == $year;
+        });
         
         return view('pages.dashboard', [
-            'approved' => array_values($approved),
-            'rejected' => array_values($rejected),
-            'all' => array_values($body['data'])
+            'approved' => $approvedMonth,
+            'rejected' => $rejectedMonth,
+            'all' => $body['data']
         ]);
     }
     
