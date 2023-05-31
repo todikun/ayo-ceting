@@ -40,8 +40,8 @@ Route::middleware('checkApiToken')->group(function() {
     Route::prefix('konsultasi/')->group(function() {
         Route::get('list', [KonsultasiController::class, 'index'])->name('konsultasi.index');
         Route::get('recent/message/{pengaduanId}/{userIdPengaduan}', [KonsultasiController::class, 'recentMessage'])->name('konsultasi.message');
-        Route::get('history/message', [KonsultasiController::class, 'riwayatKonsultasi'])->name('konsultasi.riwayat');
-        Route::get('history/message/{id}', [KonsultasiController::class, 'riwayatKonsultasi'])->name('konsultasi.riwayat.detail');
+        Route::get('riwayat', [KonsultasiController::class, 'riwayatKonsultasi'])->name('konsultasi.riwayat');
+        Route::get('riwayat/{id}', [KonsultasiController::class, 'riwayatKonsultasiDetail'])->name('konsultasi.riwayat.detail');
         
     });
 

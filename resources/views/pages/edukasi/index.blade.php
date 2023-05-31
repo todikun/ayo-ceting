@@ -16,17 +16,24 @@
     <div class="col-12">
         <div class="card-body bg-white rounded">
             <div class="d-flex">
-                <div class="section-title">List Edukasi</div>
+                <div class="section-title">List Edukasi </div>
 
                 <div class="col pt-4">
-                    <a href="{{route('edukasi.create')}}" class="btn btn-sm btn-primary" style="float: right"
-                        title="Tambah">
-                        Tambah
-                    </a>
+
+                    <div class="float-right">
+
+                        <a href="{{route('edukasi.create')}}" class="mr-1 btn btn-sm btn-primary" title="Tambah">
+                            Tambah
+                        </a>
+                        <a href="#" id="btnRefreshTable" class="btn btn-sm btn-info" title="Refresh"> Refresh
+                            <i class="fas fa-refresh"></i>
+                        </a>
+                    </div>
                 </div>
             </div>
             <div class="table-responsive">
-                <table id="myTable" class="table">
+
+                <table class="table " id="myTable">
                     <thead>
                         <tr>
                             <th width="1%">#</th>
@@ -36,38 +43,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($edukasi as $item)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$item['judul']}}</td>
-                            <td>
-                                {{\Carbon\Carbon::parse($item['created_at'])->locale('id')->translatedFormat('j
-                                F Y')}}
-                            </td>
-                            <td>
-                                <a href="{{route('edukasi.show', $item['slug'])}}"
-                                    class="btn btn-sm btn-edit btn-secondary" title="Detail">
-                                    <i class="ri-eye-line"></i>
-                                </a>
 
-                                <a href="{{route('edukasi.edit', $item['slug'])}}"
-                                    class="btn btn-sm btn-edit btn-warning" title="Edit">
-                                    <i class="ri-edit-box-line"></i>
-                                </a>
-
-                                <form action="{{route('edukasi.destroy', $item['id'])}}" method="POST" class="d-inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Apakah data ini akan dihapus?')" title="Delete">
-                                        <i class="ri-eraser-line"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        <tr>
-                            @empty
-                            <td colspan="50%" class="text-center">No data</td>
-                            @endforelse
                     </tbody>
                 </table>
             </div>
@@ -77,8 +53,45 @@
 
 @endsection
 
+@push('css')
+<link rel="stylesheet" href="{{asset('dist/datatables/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
+@endpush
+
 @push('script')
+<script src="{{asset('dist/datatables/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('dist/datatables/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
 <script>
+    $(document).ready(function(){
+        $('#myTable').DataTable({
+			"autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+			"orderable": true,
+            "ajax":{
+				"url": "{{route('edukasi.index')}}",
+				"dataType": "json",
+				"type": "GET",
+				"data":function(d) {
+					d._token = "{{csrf_token()}}"
+				},
+			},
+            "columns": [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'judul' },
+                { data: 'created_at' },
+                { data: '_action' }
+            ]
+        });
+        
+    });
+
+    $('#btnRefreshTable').on('click', function(e) {
+        e.preventDefault();
+        var table = $('#myTable').DataTable();
+        table.ajax.reload();
+    })
+
     // event button detail
     $('.btn-detail').on('click', function (e) {
         e.preventDefault();

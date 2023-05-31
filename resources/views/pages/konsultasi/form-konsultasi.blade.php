@@ -200,6 +200,9 @@
             })
             .then(result => {
                 alert('vonis berhasil dibuat');
+                setTimeout(() => {
+                    window.location.replace('http://127.0.0.1:8000/pengaduan/list');
+                }, 3000);
             })
             .catch(err => {
                 console.log('Fetch error');

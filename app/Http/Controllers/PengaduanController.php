@@ -6,11 +6,14 @@ use Illuminate\Http\Request;
 
 class PengaduanController extends Controller
 {
+    private $apiUrl = 'http://103.141.74.123:5000/';
+
     public function index(Request $request)
     {
-        $url = env('API_URL').'pengajuan';
+        $url = $this->apiUrl.'pengajuan';
         $body = get_data_api($url, $request->cookie('api_token'));
-        $result = $this->filterData($body['data'], 'pending');
+        $result = $this->filterDataByStatus($body['data'], 'pending');
+
         return view('pages.pengaduan.index', [
             'pengajuan' => $result
         ]);
@@ -18,7 +21,7 @@ class PengaduanController extends Controller
 
     public function show(Request $request, $id)
     {
-        $url = env('API_URL').'pengajuan/'.$id;
+        $url = $this->apiUrl.'pengajuan/'.$id;
         $body = get_data_api($url, $request->cookie('api_token'));
         
         return view('pages.pengaduan.show', [
@@ -28,8 +31,8 @@ class PengaduanController extends Controller
 
     public function approve(Request $request, $id)
     {
-        $urlApprove = env('API_URL').'pengajuan/approve/'.$id;
-        $urlSendDiscussion = env('API_URL').'diskusi/'.$id;
+        $urlApprove = $this->apiUrl.'pengajuan/approve/'.$id;
+        $urlSendDiscussion = $this->apiUrl.'diskusi/'.$id;
         $token = $request->cookie('api_token');
 
         $userLogged = decode_jwt_token($token);
@@ -54,7 +57,7 @@ class PengaduanController extends Controller
     
     public function reject(Request $request, $id)
     {
-        $url = env('API_URL').'pengajuan/reject/'.$id;
+        $url = $this->apiUrl.'pengajuan/reject/'.$id;
         $body = put_data_api($url, $request->cookie('api_token'));
         
         if ($body['meta']['code'] === 200) {
@@ -68,16 +71,16 @@ class PengaduanController extends Controller
 
     public function riwayat(Request $request)
     {
-        $url = env('API_URL').'pengajuan';
+        $url = $this->apiUrl.'pengajuan';
         $body = get_data_api($url, $request->cookie('api_token'));
         
-        $result = $this->filterData($body['data']);
+        $result = $this->filterDataByStatus($body['data']);
         return view('pages.pengaduan.riwayat', [
             'pengajuan' => $result
         ]);
     }
     
-    private function filterData($array, $pengaduanStatus = null)
+    private function filterDataByStatus($array, $pengaduanStatus = null)
     {
         if ($pengaduanStatus != null) {
             $result = array_filter($array, function($item) use ($pengaduanStatus) {

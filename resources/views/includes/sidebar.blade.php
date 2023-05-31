@@ -1,10 +1,10 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">GEMOI</a>
+            <a href="index.html">AYOCETING</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">GE</a>
+            <a href="index.html">AC</a>
         </div>
 
         <ul class="sidebar-menu">

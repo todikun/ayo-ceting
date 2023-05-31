@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
+use Yajra\DataTables\DataTables;
+use Carbon\Carbon;
 
 class EdukasiController extends Controller
 {
@@ -13,15 +15,61 @@ class EdukasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    private $apiUrl = 'http://103.141.74.123:5000/';
+    
     public function index(Request $request)
     {
-        $url = env('API_URL').'edukasi';
-        $body = get_data_api($url, $request->cookie('api_token'));
+        if (request()->ajax()) {
+            return $this->dataTables($request->cookie('api_token'));
+        }
+        return view('pages.edukasi.index');
+    }
 
-        return view('pages.edukasi.index', [
-            'puskesmas' => $body['data']['puskesmas'] ?? '',
-            'edukasi' => $body['data']['edukasi'] ?? [],
-        ]);
+    
+    public function dataTables($token)
+    {
+        $url = $this->apiUrl.'edukasi/puskesmas';
+        $transactions = get_data_api($url, $token);
+        $decoded = decode_jwt_token($token);
+        
+        // convert to object
+        $collection = collect($transactions['data']['edukasi']);
+        $object = $collection->map(function ($item) {
+            return (object)$item;
+        });
+
+        $datatables = DataTables::of($object)
+                        ->addIndexColumn()
+                        ->editColumn('created_at', function($row) {
+                            $date = Carbon::parse($row->created_at)
+                                            ->locale('id')
+                                            ->translatedFormat('j F Y');
+                            return $date;
+                        })
+                        ->addColumn('_action', function($row){
+
+                            $html = '
+                            <div class="btn-group">
+
+                                    <a href="'.route('edukasi.show', $row->slug).'"
+                                        class="btn btn-sm btn-secondary btn-dark" title="Detail">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+
+                                    <a href="'.route('edukasi.edit', $row->slug).'" class="btn btn-sm btn-warning"
+                                        title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+
+                                </div>
+                            
+                            ';
+
+                            return $html;
+                        })
+                        ->rawColumns(['_action'])
+                        ->toJson();
+        return $datatables;
     }
 
     /**
@@ -47,7 +95,7 @@ class EdukasiController extends Controller
             'isi' => 'required',
         ]);
 
-        $url = env('API_URL').'edukasi';
+        $url = $this->apiUrl.'edukasi';
         $data = [
             'judul' => $request->judul,
             'isi' => $request->isi,
@@ -71,9 +119,9 @@ class EdukasiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, $slug)
     {
-        $url = env('API_URL').'edukasi/'.$id;
+        $url = $this->apiUrl.'edukasi/'.$slug;
         $body = get_data_api($url, $request->cookie('api_token'));
 
         return view('pages.edukasi.show', [
@@ -89,7 +137,7 @@ class EdukasiController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $url = env('API_URL').'edukasi/'.$id;
+        $url = $this->apiUrl.'edukasi/'.$id;
         $body = get_data_api($url, $request->cookie('api_token'));
 
         return view('pages.edukasi.edit', [
@@ -111,7 +159,7 @@ class EdukasiController extends Controller
             'isi' => 'required',
         ]);
 
-        $url = env('API_URL').'edukasi/'.$id;
+        $url = $this->apiUrl.'edukasi/'.$id;
         $data = [
             'judul' => $request->judul,
             'isi' => $request->isi,
@@ -136,7 +184,7 @@ class EdukasiController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $url = env('API_URL').'edukasi/'.$id;
+        $url = $this->apiUrl.'edukasi/'.$id;
         $body = delete_data_api($url, $request->cookie('api_token'));
         
         if ($body['meta']['code'] === 200) {

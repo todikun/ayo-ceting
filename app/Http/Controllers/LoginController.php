@@ -8,6 +8,8 @@ use Illuminate\Http\Client\RequestException;
 
 class LoginController extends Controller
 {
+    private $apiUrl = 'http://103.141.74.123:5000/';
+
     public function login(Request $request)
     {
         if ($request->hasCookie('api_token')) {
@@ -19,7 +21,7 @@ class LoginController extends Controller
 
     public function loginProses(Request $request)
     {
-        $url = env('API_URL').'login';
+        $url = $this->apiUrl.'login';
         try {
             $response = Http::post($url, [
                 'username' => $request->input('username'),

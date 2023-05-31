@@ -6,9 +6,10 @@ use Illuminate\Http\Request;
 
 class KonsultasiController extends Controller
 {
+    private $apiUrl = 'http://103.141.74.123:5000/';
     public function index(Request $request)
     {
-        $url = env('API_URL').'pengajuan';
+        $url = $this->apiUrl.'pengajuan';
         $body = get_data_api($url, $request->cookie('api_token'));
         $result = $this->filterData($body['data'], true);
 
@@ -19,7 +20,7 @@ class KonsultasiController extends Controller
 
     public function recentMessage(Request $request, $pengaduanId, $userIdPengaduan)
     {
-        $url = env('API_URL').'diskusi/'.$pengaduanId;
+        $url = $this->apiUrl.'diskusi/'.$pengaduanId;
         $body = get_data_api($url, $request->cookie('api_token'));
         $decodedToken = decode_jwt_token($request->cookie('api_token'));
         
@@ -34,10 +35,13 @@ class KonsultasiController extends Controller
 
     public function riwayatKonsultasi(Request $request)
     {
-        $url = env('API_URL').'pengajuan';
+        $url = $this->apiUrl.'pengajuan';
         $body = get_data_api($url, $request->cookie('api_token'));
         $result = $this->filterData($body['data'], false);
-        return $result;
+
+        return view('pages.konsultasi.riwayat', [
+            'pengajuan' => $result
+        ]);
     }
     
     public function riwayatKonsultasiDetail(Request $request, $id)

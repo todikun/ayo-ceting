@@ -59,7 +59,7 @@
                                         <i class="fas fa-check"></i>
                                     </a>
 
-                                    <a href="{{route('reject.update', $item['id'])}}" class="btn btn-sm btn-warning"
+                                    <a href="{{route('reject.update', $item['id'])}}" class="btn btn-sm btn-danger"
                                         title="Reject"
                                         onclick="return confirm('Apakah anda yakin reject pengajuan ini?')">
                                         <i class="fas fa-times"></i>
@@ -90,7 +90,7 @@
                 Approve
             </a>
             
-            <a href="${this.dataset.reject}" class="btn btn-sm btn-warning"
+            <a href="${this.dataset.reject}" class="btn btn-sm btn-danger"
                 title="Reject" onclick="return confirm('Apakah anda yakin reject pengajuan ini?')">
                 Reject
             </a>

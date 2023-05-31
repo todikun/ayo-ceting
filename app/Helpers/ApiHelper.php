@@ -101,8 +101,9 @@ if (!function_exists('decode_jwt_token')) {
     
     function decode_jwt_token($token)
     {
+        $secretKey = 'asdat72346723dbagdak922321hjdasbbui12378';
         try {
-            $decoded = JWT::decode($token, new Key(env('JWT_SECRET'), 'HS256'));
+            $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
             return $decoded;
         } catch (\Exception $e) {
             return $e->getMessage();
