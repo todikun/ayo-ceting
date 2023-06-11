@@ -144,7 +144,7 @@
                 if (!snapshot.empty) {
                     snapshot.forEach(function(doc) {
                         var data = doc.data();
-                        console.log('data:',data);
+                        
                         if (data.pengaduan_id == pengaduanId) {
                             let created_at = formatTimestampToHHMM(data.timestamp);
                             let position = loggedUser == data.sender ? 'chat-right' : '';
@@ -162,6 +162,7 @@
                         }
                     });
                     chatBubble.innerHTML = messageTemp;
+                    chatContent.scrollTop = chatContent.scrollHeight;
                 } else {
                     chatBubble.innerHTML = '<h4 class="text-center">Chat is empty</h4>';
                 }
