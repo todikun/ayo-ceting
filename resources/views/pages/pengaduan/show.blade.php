@@ -1,5 +1,4 @@
-<div class="col-lg
-">
+<div class="col-lg">
     <form action="#">
 
         <div class="row mb-3">

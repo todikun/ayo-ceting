@@ -16,6 +16,9 @@
     <link rel="stylesheet" href="{{asset('dist/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('dist/css/components.css')}}">
 
+    <link rel="stylesheet" href="{{asset('dist/datatables/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
+    <link href="{{asset('dist/iziToast/css/iziToast.min.css')}}" rel="stylesheet">
+
     <!-- Page Specific CSS File -->
     @stack('css')
 </head>
@@ -50,11 +53,9 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                        </div>
+                        <div class="modal-body"></div>
                         <div class="modal-footer bg-whitesmoke br">
                             <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
-                            {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
                         </div>
                     </div>
                 </div>
@@ -102,8 +103,109 @@
 
     </script>
 
+    <script src="{{asset('dist/datatables/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+    <script src="{{asset('dist/datatables/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
+
+    <script src="{{asset('dist/iziToast/js/iziToast.min.js')}}"></script>
+
     <!-- Page Specific JS File -->
     @stack('script')
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+    <script src="{{asset('dist/js/decrypt.js')}}"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        const encryptedFirebaseConfig = "{{env('ENCRYPT_FIREBASE_CONFIG')}}";
+        const key = "{{env('CHIPER_KEY')}}";
+
+        const firebaseConfig = decryptFirebaseConfig(encryptedFirebaseConfig, key);
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        const firestore = firebase.firestore();
+        const messageCollection = firestore.collection('message');
+
+        const pengaduanId = "{{$pengaduanId ?? ''}}";
+        const loggedUser = "{{$loggedUser ?? ''}}";
+        const userIdPengaduan = "{{$userIdPengaduan ?? ''}}";
+
+        if (pengaduanId != '') {
+            const chatContent = document.querySelector('.chat-content');
+            const chatBubble = document.querySelector('.chat-content');
+            const message = document.querySelector('.message');
+
+            messageCollection.orderBy("timestamp", "asc").onSnapshot(function(snapshot) {
+                var messageTemp = '';
+                if (!snapshot.empty) {
+                    snapshot.forEach(function(doc) {
+                        var data = doc.data();
+                        console.log('data:',data);
+                        if (data.pengaduan_id == pengaduanId) {
+                            let created_at = formatTimestampToHHMM(data.timestamp);
+                            let position = loggedUser == data.sender ? 'chat-right' : '';
+                            
+                            messageTemp += `
+                            <div class="chat-item ${position}">
+                                <div class="chat-details">
+                                    <div class="chat-text">
+                                        ${data.message}
+                                        <div class="chat-time">${created_at}</div>    
+                                    </div>
+                                </div>
+                            </div>
+                            `;
+                        }
+                    });
+                    chatBubble.innerHTML = messageTemp;
+                } else {
+                    chatBubble.innerHTML = '<h4 class="text-center">Chat is empty</h4>';
+                }
+                
+            }, function(error) {
+                console.log('Firestore error:', error);
+            });
+
+            function addData(e) {
+                e.preventDefault();
+                const collectionRef = firestore.collection('message'); // Replace 'collection_name' with your desired collection name
+                const messageInput = document.getElementById('messageInput');
+                // Data to be added
+                const data = {
+                    message: e.target.elements.message.value,
+                    pengaduan_id: pengaduanId,
+                    receiver: userIdPengaduan,
+                    sender: loggedUser,
+                    timestamp: new Date()
+                };
+                
+                messageInput.value = '';
+                
+                // Add the data to Firestore
+                collectionRef.add(data)
+                    .then(function(docRef) {
+                        console.log("Document written with ID: ", docRef.id);
+                    })
+                    .catch(function(error) {
+                        console.error("Error adding document: ", error);
+                    });
+            }
+
+            function formatTimestampToHHMM(timestamp) {
+                var date = new Date(timestamp.seconds * 1000);
+                var hours = date.getHours().toString().padStart(2, '0');
+                var minutes = date.getMinutes().toString().padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+
+        }
+    </script>
+
+
 </body>
 
 </html>

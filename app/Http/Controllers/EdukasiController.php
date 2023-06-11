@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
-use Yajra\DataTables\DataTables;
-use Carbon\Carbon;
 
 class EdukasiController extends Controller
 {
@@ -15,7 +15,13 @@ class EdukasiController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    private $apiUrl = 'http://103.141.74.123:5000/';
+    
+    private $apiUrl;
+
+    public function __construct()
+    {
+        $this->apiUrl = env('API_URL');
+    }
     
     public function index(Request $request)
     {
@@ -26,11 +32,10 @@ class EdukasiController extends Controller
     }
 
     
-    public function dataTables($token)
+    private function dataTables($token)
     {
         $url = $this->apiUrl.'edukasi/puskesmas';
         $transactions = get_data_api($url, $token);
-        $decoded = decode_jwt_token($token);
         
         // convert to object
         $collection = collect($transactions['data']['edukasi']);

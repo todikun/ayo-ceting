@@ -3,20 +3,90 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Yajra\DataTables\DataTables;
 
 class PengaduanController extends Controller
 {
-    private $apiUrl = 'http://103.141.74.123:5000/';
+    
+    private $apiUrl;
+
+    public function __construct()
+    {
+        $this->apiUrl = env('API_URL');
+    }
 
     public function index(Request $request)
     {
-        $url = $this->apiUrl.'pengajuan';
-        $body = get_data_api($url, $request->cookie('api_token'));
-        $result = $this->filterDataByStatus($body['data'], 'pending');
+        $token = $request->cookie('api_token');
+        if (request()->ajax()) {
+            return $this->dataTablesPengaduan($token);
+        }
 
-        return view('pages.pengaduan.index', [
-            'pengajuan' => $result
-        ]);
+        return view('pages.pengaduan.index', compact('token'));
+    }
+
+    private function dataTablesPengaduan($token)
+    {
+        $url = $this->apiUrl.'pengajuan';
+        $body = get_data_api($url, $token);
+        $result = $this->filterDataByStatus($body['data'], 'pending');
+        
+        // convert to object
+        $collection = collect($result);
+        $object = $collection->map(function ($item) {
+            return (object)$item;
+        });
+
+        $datatables = DataTables::of($object)
+                        ->addIndexColumn()
+                        ->editColumn('user', function($row) {
+                            return $row->user['name'];
+                        })
+                        ->editColumn('category_pengajuan', function($row) {
+                            return $row->category_pengajuan['category_name'];
+                        })
+                        ->editColumn('created_at', function($row) {
+                            $date = Carbon::parse($row->created_at)
+                                            ->locale('id')
+                                            ->translatedFormat('j F Y');
+                            return $date;
+                        })
+                        ->addColumn('_status', function($row) {
+                            $html = '<span class="badge badge-secondary text-dark">'.$row->status.'</span>';
+                            return $html;
+                        })
+                        ->addColumn('_action', function($row){
+
+                            $html = '
+                                    <div class="btn-group">
+
+                                            <a href="'.route('pengaduan.show', $row->id).'" 
+                                                class="btn btn-sm btn-secondary btn-dark btn-detail" title="Detail">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+
+                                            <button data-id="'.$row->id.'" data-nama="'.$row->user['name'].'" data-status="approve"
+                                                class="btn btn-sm btn-success konfirmasi"
+                                                title="Approve">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+
+                                            <button data-id="'.$row->id.'" data-nama="'.$row->user['name'].'" data-status="reject"
+                                                class="btn btn-sm btn-danger konfirmasi"
+                                                title="Reject">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+
+                                        </div>
+                                    
+                                    ';
+
+                            return $html;
+                        })
+                        ->rawColumns(['_status', '_action'])
+                        ->toJson();
+        return $datatables;
     }
 
     public function show(Request $request, $id)
@@ -29,55 +99,52 @@ class PengaduanController extends Controller
         ]);
     }
 
-    public function approve(Request $request, $id)
-    {
-        $urlApprove = $this->apiUrl.'pengajuan/approve/'.$id;
-        $urlSendDiscussion = $this->apiUrl.'diskusi/'.$id;
-        $token = $request->cookie('api_token');
-
-        $userLogged = decode_jwt_token($token);
-        $bodyApprove = put_data_api($urlApprove, $token);
-        if ($bodyApprove['meta']['code'] === 200) {
-            toastr()->success($bodyApprove['meta']['message']);
-        } else {
-            toastr()->error($bodyApprove['meta']['message']);
-        }
-        
-        // send message to user
-        $bodyDiscussion = post_data_api($urlSendDiscussion, $token, 
-            [
-                'to_user_id' => $bodyApprove['data']['user_id'],
-                'from_user_id' => $userLogged->id,
-                'isi_diskusi' => 'Halo, apa yang bisa kami bantu?',
-            ]
-        );
-
-        return redirect()->route('pengaduan.index');
-    }
-    
-    public function reject(Request $request, $id)
-    {
-        $url = $this->apiUrl.'pengajuan/reject/'.$id;
-        $body = put_data_api($url, $request->cookie('api_token'));
-        
-        if ($body['meta']['code'] === 200) {
-            toastr()->success($body['meta']['message']);
-        } else {
-            toastr()->error($body['meta']['message']);
-        }
-
-        return redirect()->route('pengaduan.index');
-    }
-
     public function riwayat(Request $request)
     {
+        if (request()->ajax()) {
+            return $this->dataTablesRiwayatPengaduan($request->cookie('api_token'));
+        }
+        return view('pages.pengaduan.riwayat');
+    }
+
+    private function dataTablesRiwayatPengaduan($token)
+    {
         $url = $this->apiUrl.'pengajuan';
-        $body = get_data_api($url, $request->cookie('api_token'));
-        
+        $body = get_data_api($url, $token);
         $result = $this->filterDataByStatus($body['data']);
-        return view('pages.pengaduan.riwayat', [
-            'pengajuan' => $result
-        ]);
+        
+        // convert to object
+        $collection = collect($result);
+        $object = $collection->map(function ($item) {
+            return (object)$item;
+        });
+
+        $datatables = DataTables::of($object)
+                        ->addIndexColumn()
+                        ->editColumn('user', function($row) {
+                            return $row->user['name'];
+                        })
+                        ->editColumn('category_pengajuan', function($row) {
+                            return $row->category_pengajuan['category_name'];
+                        })
+                        ->editColumn('created_at', function($row) {
+                            $date = Carbon::parse($row->created_at)
+                                            ->locale('id')
+                                            ->translatedFormat('j F Y');
+                            return $date;
+                        })
+                        ->addColumn('_status', function($row) {
+                            $html = '';
+                            if ($row->status == 'approved') {
+                                $html = '<span class="badge badge-success">'.$row->status.'</span>';
+                            } else {
+                                $html = '<span class="badge badge-danger">'.$row->status.'</span>';
+                            }
+                            return $html;
+                        })
+                        ->rawColumns(['_status'])
+                        ->toJson();
+        return $datatables;
     }
     
     private function filterDataByStatus($array, $pengaduanStatus = null)

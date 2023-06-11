@@ -29,6 +29,9 @@
                         </tr>
                     </thead>
                     <tbody>
+
+                    </tbody>
+                    {{-- <tbody>
                         @forelse ($pengajuan as $item)
                         <tr>
                             <td>{{$loop->iteration}}</td>
@@ -40,7 +43,6 @@
                             </td>
                             <td>
                                 <span class="badge badge-success">
-                                    {{-- {{$item['status']}} --}}
                                     active
                                 </span>
                             </td>
@@ -56,10 +58,40 @@
                             @empty
                             <td colspan="50%" class="text-center">No data</td>
                             @endforelse
-                    </tbody>
+                    </tbody> --}}
                 </table>
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('script')
+<script>
+    $(document).ready(function(){
+            let table = $('#myTable').DataTable({
+                "autoWidth": false,
+                "processing": true,
+                "serverSide": true,
+                "orderable": true,
+                "ajax":{
+                    "url": "{{route('konsultasi.index')}}",
+                    "dataType": "json",
+                    "type": "GET",
+                    "data":function(d) {
+                        d._token = "{{csrf_token()}}"
+                    },
+                },
+                "columns": [
+                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                    { data: 'user' },
+                    { data: 'category_pengajuan' },
+                    { data: 'isi_pengajuan' },
+                    { data: 'created_at' },
+                    { data: '_status' },
+                    { data: '_action' }
+                ]
+            });
+        });
+</script>
+@endpush

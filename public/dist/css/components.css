@@ -299,13 +299,14 @@
   width: 100%;
   margin-bottom: 25px;
 }
-.chat-box .chat-content .chat-item.chat-right img {
+/* .chat-box .chat-content .chat-item.chat-right img {
   float: right;
-}
+} */
 .chat-box .chat-content .chat-item.chat-right .chat-details {
-  margin-left: 0;
-  margin-right: 70px;
+  float: right;
   text-align: right;
+  margin-right: 10px;
+  max-width: 390px;
 }
 .chat-box .chat-content .chat-item.chat-right .chat-details .chat-text {
   text-align: left;
@@ -318,7 +319,8 @@
   border-radius: 50%;
 }
 .chat-box .chat-content .chat-item .chat-details {
-  margin-left: 70px;
+  margin-left: 10px;
+  max-width: 390px;
 }
 .chat-box .chat-content .chat-item .chat-details .chat-text {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
@@ -343,6 +345,7 @@
 }
 .chat-box .chat-content .chat-item .chat-details .chat-time {
   margin-top: 5px;
+  text-align: right;
   font-size: 12px;
   font-weight: 500;
   opacity: 0.6;

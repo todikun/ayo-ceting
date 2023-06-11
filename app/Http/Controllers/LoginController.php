@@ -8,7 +8,13 @@ use Illuminate\Http\Client\RequestException;
 
 class LoginController extends Controller
 {
-    private $apiUrl = 'http://103.141.74.123:5000/';
+    
+    private $apiUrl;
+
+    public function __construct()
+    {
+        $this->apiUrl = env('API_URL');
+    }
 
     public function login(Request $request)
     {

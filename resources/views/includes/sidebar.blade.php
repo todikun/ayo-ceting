@@ -38,7 +38,7 @@
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
                     <span>Konsultasi</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{Route::is('konsultasi.index') ? 'active':''}}"><a class="nav-link"
+                    <li class="{{Route::is(['konsultasi.index', 'konsultasi.message']) ? 'active':''}}"><a class="nav-link"
                             href="{{route('konsultasi.index')}}">Konsultasi</a>
                     </li>
                     <li class="{{Route::is('konsultasi.riwayat') ? 'active':''}}"><a class="nav-link"

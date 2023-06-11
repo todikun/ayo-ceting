@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Pengajuan')
+@section('title', 'Pengaduan')
 
 @section('content-header')
 <h1>Pengaduan</h1>
@@ -29,48 +29,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($pengajuan as $item)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$item['user']['name']}}</td>
-                            <td>{{$item['category_pengajuan']['category_name']}}</td>
-                            <td>{{$item['isi_pengajuan']}}</td>
-                            <td>
-                                {{\Carbon\Carbon::parse($item['created_at'])->locale('id')->translatedFormat('j F Y')}}
-                            </td>
-                            <td>
-                                <span class="badge badge-light">
-                                    {{$item['status']}}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group">
 
-                                    <a href="{{route('pengaduan.show', $item['id'])}}"
-                                        data-approve="{{route('approve.update', $item['id'])}}"
-                                        data-reject="{{route('reject.update', $item['id'])}}"
-                                        class="btn btn-sm btn-detail btn-dark" title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-
-                                    <a href="{{route('approve.update', $item['id'])}}" class="btn btn-sm btn-success"
-                                        title="Approve"
-                                        onclick="return confirm('Apakah anda yakin approve pengajuan ini?')">
-                                        <i class="fas fa-check"></i>
-                                    </a>
-
-                                    <a href="{{route('reject.update', $item['id'])}}" class="btn btn-sm btn-danger"
-                                        title="Reject"
-                                        onclick="return confirm('Apakah anda yakin reject pengajuan ini?')">
-                                        <i class="fas fa-times"></i>
-                                    </a>
-
-                                </div>
-                            </td>
-                        <tr>
-                            @empty
-                            <td colspan="50%" class="text-center">No data</td>
-                            @endforelse
                     </tbody>
                 </table>
             </div>
@@ -81,35 +40,109 @@
 
 @push('script')
 <script>
-    $('.btn-detail').on('click', function (e) {
-        e.preventDefault();
-        const url = $(this).attr('href');
-        const tombolApproveReject = `
-            <a href="${this.dataset.approve}" class="btn btn-sm btn-success" title="Approve"
-                onclick="return confirm('Apakah anda yakin approve pengajuan ini?')">
-                Approve
-            </a>
-            
-            <a href="${this.dataset.reject}" class="btn btn-sm btn-danger"
-                title="Reject" onclick="return confirm('Apakah anda yakin reject pengajuan ini?')">
-                Reject
-            </a>
-        `;
-
-        $.ajax({
-            url: url,
-            dataType: 'HTML',
-            method: 'GET',
-            success: function (result) {
-                $('#modal-form').find('.modal-title').html('Detail Laporan');
-                $('#modal-form').find('.modal-body').html(result);
-                $('#modal-form').find('.modal-footer').html(tombolApproveReject);
-                $('#modal-form').modal('show');
+    $(document).ready(function(){
+        let table = $('#myTable').DataTable({
+            "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+            "orderable": true,
+            "ajax":{
+                "url": "{{route('pengaduan.index')}}",
+                "dataType": "json",
+                "type": "GET",
+                "data":function(d) {
+                    d._token = "{{csrf_token()}}"
+                },
             },
-            error: function (err) {
-                console.log(err);
-            },
+            "columns": [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'user' },
+                { data: 'category_pengajuan' },
+                { data: 'isi_pengajuan' },
+                { data: 'created_at' },
+                { data: '_status' },
+                { data: '_action' }
+            ]
         });
+
+        table.on('draw.dt', function(){
+            var btnKonfirmasi = document.querySelectorAll('.konfirmasi');
+            btnKonfirmasi.forEach(function(button){
+                button.addEventListener('click', function(){
+                    let id = button.dataset.id;
+                    let status = button.dataset.status;
+                    let nama = button.dataset.nama;
+                    let url = `http://103.141.74.123:5000/pengajuan/${status}/${id}`;
+                    let token = @json($token);
+
+                    if (confirm(`Apakah anda yakin ${status} pengaduan dari ${nama}?`) == true) {  
+                        fetch(url, {
+                            method: "PUT",
+                            body: JSON.stringify({}),
+                            headers: {
+                                "Authorization": `Bearer ${token}`,
+                                "Content-type": "application/json; charset=UTF-8"
+                            }
+                        })
+                        .then(res =>{
+                            return res.json();
+                        })
+                        .then(result => {
+                            iziToast.success({
+                                title: 'Success',
+                                message: result.meta.message,
+                                position: 'topRight',    
+                                timeout: 2500,
+                                drag: false,
+                                transitionIn: 'fadeInUp',
+                                transitionOut: 'fadeOutRight',
+                            });
+                            table.ajax.reload();
+                        })
+                        .catch(err => {
+                            console.log('err',err);
+                            iziToast.error({
+                                title: 'Error',
+                                message: 'Network Error',
+                                position: 'topRight',    
+                                timeout: 2500,
+                                drag: false,
+                                transitionIn: 'fadeInUp',
+                                transitionOut: 'fadeOutRight',
+                            });
+                        });
+                    } 
+                });
+            });
+
+            var btnDetail = document.querySelectorAll('.btn-detail');
+            btnDetail.forEach(function(button){
+                button.addEventListener('click', function(e){
+                    e.preventDefault();
+                    let url = button.href;
+
+                    $.ajax({
+                        url: url,
+                        dataType: 'HTML',
+                        method: 'GET',
+                        success: function (result) {
+                            console.log('result', result);
+                            $('#modal-form').find('.modal-title').html('Detail Pengaduan');
+                            $('#modal-form').find('.modal-body').html(result);
+                            $('#modal-form').modal('show');
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        },
+                    }); 
+                });
+            });
+        });
+
     });
+
+    
+
 </script>
+
 @endpush

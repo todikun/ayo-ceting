@@ -33,13 +33,11 @@ Route::middleware('checkApiToken')->group(function() {
         Route::get('list', [PengaduanController::class, 'index'])->name('pengaduan.index');
         Route::get('riwayat', [PengaduanController::class, 'riwayat'])->name('pengaduan.riwayat');
         Route::get('show/{id}', [PengaduanController::class, 'show'])->name('pengaduan.show');
-        Route::get('approve/{id}', [PengaduanController::class, 'approve'])->name('approve.update');
-        Route::get('reject/{id}', [PengaduanController::class, 'reject'])->name('reject.update');
     });
 
     Route::prefix('konsultasi/')->group(function() {
         Route::get('list', [KonsultasiController::class, 'index'])->name('konsultasi.index');
-        Route::get('recent/message/{pengaduanId}/{userIdPengaduan}', [KonsultasiController::class, 'recentMessage'])->name('konsultasi.message');
+        Route::get('recent/message', [KonsultasiController::class, 'recentMessage'])->name('konsultasi.message');
         Route::get('riwayat', [KonsultasiController::class, 'riwayatKonsultasi'])->name('konsultasi.riwayat');
         Route::get('riwayat/{id}', [KonsultasiController::class, 'riwayatKonsultasiDetail'])->name('konsultasi.riwayat.detail');
         

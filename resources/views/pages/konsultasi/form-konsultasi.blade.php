@@ -17,7 +17,7 @@
             <div class="card-header">
                 <div class="col">
 
-                    <h4>Form Chat</h4>
+                    <h4>{{$userNamePengaduan}}</h4>
                 </div>
                 <div class="col text-right">
                     <button class="btn btn-danger" onclick="endChat(event)">End Chat</button>
@@ -31,9 +31,9 @@
                 </div>
             </div>
             <div class="card-footer chat-form">
-                <form id="chat-form">
-                    <input type="text" name="isi_diskusi" class="form-control" placeholder="Type a message">
-                    <button class="btn btn-primary" onclick="sendMessage(event)">
+                <form id="chat-form" onsubmit="addData(event)">
+                    <input type="text" name="message" class="form-control" id="messageInput" placeholder="Type a message">
+                    <button class="btn btn-primary" type="submit">
                         <i class="far fa-paper-plane"></i>
                     </button>
                 </form>
@@ -65,71 +65,69 @@
 
 @push('script')
 <script>
-    var pengaduanId = "{{$pengaduanId}}";
-    var loggedUser = "{{$loggedUser}}";
-    var userIdPengaduan = "{{$userIdPengaduan}}";
-    var token = "{{$token}}";
-    var reloadMessage = 0;
-    var chatContent = document.querySelector('.chat-content');
+    // var pengaduanId = "{{$pengaduanId}}";
+    // var loggedUser = "{{$loggedUser}}";
+    // var userIdPengaduan = "{{$userIdPengaduan}}";
+    // var chatContent = document.querySelector('.chat-content');
 
-    document.addEventListener("DOMContentLoaded", function(event) {
-        const chatBubble = document.querySelector('.chat-content');
-        const message = document.querySelector('.message');
-        const sendChat = document.querySelector('.sending-chat');
+    // document.addEventListener("DOMContentLoaded", function(event) {
+    //     const chatBubble = document.querySelector('.chat-content');
+    //     const message = document.querySelector('.message');
+    //     const sendChat = document.querySelector('.sending-chat');
 
-        setInterval(() => {
-            fetch(`http://103.141.74.123:5000/diskusi/${pengaduanId}`, {
-                method: "GET",
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-type": "application/json; charset=UTF-8"
-                }
-            })
-            .then(res => {
-                return res.json();
-            })
-            .then(result => {
-                let messageTemp = '';
-                result.data.map(data => {
-                    let created_at = new Date(data.created_at);
+    //     // setInterval(() => {
+    //     //     fetch(`http://103.141.74.123:5000/diskusi/${pengaduanId}`, {
+    //     //         method: "GET",
+    //     //         headers: {
+    //     //             "Authorization": `Bearer ${token}`,
+    //     //             "Content-type": "application/json; charset=UTF-8"
+    //     //         }
+    //     //     })
+    //     //     .then(res => {
+    //     //         return res.json();
+    //     //     })
+    //     //     .then(result => {
+    //     //         let messageTemp = '';
+    //     //         result.data.map(data => {
+    //     //             let created_at = new Date(data.created_at);
 
-                    if (userIdPengaduan == data.to_user_id) {
-                        messageTemp += `
-                        <div class="chat-item chat-right">
-                            <div class="chat-details">
-                                <div class="chat-text">${data.isi_diskusi}</div>
-                                <div class="chat-time">${created_at.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</div>
-                            </div>
-                        </div>
-                        `;
-                    } else {
-                        messageTemp += `
-                        <div class="chat-item">
-                            <div class="chat-details">
-                                <div class="chat-text">${data.isi_diskusi}</div>
-                                <div class="chat-time">${created_at.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</div>
-                            </div>
-                        </div>
-                        `;
-                    }
-                });
-                chatBubble.innerHTML = messageTemp;
+    //     //             if (userIdPengaduan == data.to_user_id) {
+    //     //                 messageTemp += `
+    //     //                 <div class="chat-item chat-right">
+    //     //                     <div class="chat-details">
+    //     //                         <div class="chat-text">${data.isi_diskusi}</div>
+    //     //                         <div class="chat-time">${created_at.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</div>
+    //     //                     </div>
+    //     //                 </div>
+    //     //                 `;
+    //     //             } else {
+    //     //                 messageTemp += `
+    //     //                 <div class="chat-item">
+    //     //                     <div class="chat-details">
+    //     //                         <div class="chat-text">${data.isi_diskusi}</div>
+    //     //                         <div class="chat-time">${created_at.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'})}</div>
+    //     //                     </div>
+    //     //                 </div>
+    //     //                 `;
+    //     //             }
+    //     //         });
+    //     //         chatBubble.innerHTML = messageTemp;
 
-                if (reloadMessage == 0) {
-                    // scroll to bottom
-                    chatContent.scrollTop = chatContent.scrollHeight;
-                }
+    //     //         if (reloadMessage == 0) {
+    //     //             // scroll to bottom
+    //     //             chatContent.scrollTop = chatContent.scrollHeight;
+    //     //         }
 
-                reloadMessage++;
-                // console.log('Fetch success');
-                console.log("Result : ", result);
-            })
-            .catch(err => {
-                console.log('Fetch error');
-            });
-        }, 3000);
+    //     //         reloadMessage++;
+    //     //         // console.log('Fetch success');
+    //     //         console.log("Result : ", result);
+    //     //     })
+    //     //     .catch(err => {
+    //     //         console.log('Fetch error');
+    //     //     });
+    //     // }, 3000);
 
-    });
+    // });
 
     function sendMessage(e)
     {

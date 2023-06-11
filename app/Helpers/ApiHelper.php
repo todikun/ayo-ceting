@@ -1,6 +1,5 @@
 <?php 
 
-use Firebase\JWT\{JWT, Key};
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Client\RequestException;
 
@@ -95,18 +94,4 @@ if (!function_exists('delete_data_api')) {
         return $body;
     }
     
-}
-
-if (!function_exists('decode_jwt_token')) {
-    
-    function decode_jwt_token($token)
-    {
-        $secretKey = 'asdat72346723dbagdak922321hjdasbbui12378';
-        try {
-            $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
-            return $decoded;
-        } catch (\Exception $e) {
-            return $e->getMessage();
-        }
-    }
 }
