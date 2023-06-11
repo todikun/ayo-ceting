@@ -1,1 +1,2 @@
-ok
+detail konsultasi
+vonis

@@ -17,7 +17,7 @@
             <div class="card-header">
                 <div class="col">
 
-                    <h4>{{$userNamePengaduan}}</h4>
+                    <h4>{{$_auth['name']}}</h4>
                 </div>
                 <div class="col text-right">
                     <button class="btn btn-danger" onclick="endChat(event)">End Chat</button>
@@ -52,8 +52,7 @@
                 </form>
             </div>
             <div class="card-footer">
-                <button class="btn btn-secondary form-control" id="secondary-submit">Submit
-                </button>
+                <button class="btn btn-secondary form-control" id="secondary-submit">Submit</button>
                 <button class="btn btn-primary form-control d-none" id="primary-submit"
                     onclick="sendVonis(event)">Submit
                 </button>
@@ -82,10 +81,22 @@
         const form = document.getElementById('vonis-form');
         const formData = new FormData(form);
         const vonisInput = form.querySelectorAll('textarea');
+        const pengaduanId = "{{$pengaduanId}}";
+        const token = "{{$_auth['token']}}";
+        const baseUrl = "{{url('/')}}"; 
 
         if (vonisInput[0].value.trim() === '') {
             vonisInput[0].focus();
-            alert('vonis tidak boleh kosong');
+            
+            iziToast.warning({
+                title: 'Warning',
+                message: 'Vonis tidak boleh kosong!',
+                position: 'topRight',    
+                timeout: 2500,
+                drag: false,
+                transitionIn: 'fadeInUp',
+                transitionOut: 'fadeOutRight',
+            });
         }
 
         fetch(`http://103.141.74.123:5000/vonis/${pengaduanId}`, {
@@ -102,13 +113,29 @@
                 return res.json();
             })
             .then(result => {
-                alert('vonis berhasil dibuat');
+                iziToast.success({
+                    title: 'Success',
+                    message: result.meta.message,
+                    position: 'topRight',    
+                    timeout: 2500,
+                    drag: false,
+                    transitionIn: 'fadeInUp',
+                    transitionOut: 'fadeOutRight',
+                });
                 setTimeout(() => {
-                    window.location.replace('http://127.0.0.1:8000/pengaduan/list');
+                    window.location.replace(`${baseUrl}/pengaduan/list`);
                 }, 3000);
             })
-            .catch(err => {
-                console.log('Fetch error');
+            .catch(err => { 
+                iziToast.warning({
+                    title: 'Warning',
+                    message: 'Network error!',
+                    position: 'topRight',    
+                    timeout: 2500,
+                    drag: false,
+                    transitionIn: 'fadeInUp',
+                    transitionOut: 'fadeOutRight',
+                });
             });
     }
 

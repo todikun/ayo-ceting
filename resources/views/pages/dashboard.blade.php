@@ -125,20 +125,6 @@
     </div>
 </div>
 
-<form action="#" onsubmit="addData(event)">
-    <input type="text" name="pengaduan_id" value="57">
-    <input type="text" name="receiver" value="24">
-    <input type="text" name="sender" value="6">
-    <input type="text" name="message">
-    <button type="submit">Kirim</button>
-</form>
-
-<div class="pt-5">
-    <h5>Test firebase</h5>
-    <ul id="firebase-data">
-
-    </ul>
-</div>
 @endsection
 
 @push('script')

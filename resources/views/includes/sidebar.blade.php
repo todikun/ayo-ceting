@@ -1,10 +1,14 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
+
+        @php
+        $title = env('SETTING_CORE_APP') == 1 ? env('AYOCETING_APP_TITLE') : env('GEMOI_APP_TITLE');
+        @endphp
         <div class="sidebar-brand">
-            <a href="index.html">AYOCETING</a>
+            <a href="{{route('dashboard')}}">{{$title}}</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">AC</a>
+            <a href="{{route('dashboard')}}">**</a>
         </div>
 
         <ul class="sidebar-menu">
@@ -38,8 +42,8 @@
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
                     <span>Konsultasi</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{Route::is(['konsultasi.index', 'konsultasi.message']) ? 'active':''}}"><a class="nav-link"
-                            href="{{route('konsultasi.index')}}">Konsultasi</a>
+                    <li class="{{Route::is(['konsultasi.index', 'konsultasi.message']) ? 'active':''}}"><a
+                            class="nav-link" href="{{route('konsultasi.index')}}">Konsultasi</a>
                     </li>
                     <li class="{{Route::is('konsultasi.riwayat') ? 'active':''}}"><a class="nav-link"
                             href="{{route('konsultasi.riwayat')}}">Riwayat Konsultasi</a>

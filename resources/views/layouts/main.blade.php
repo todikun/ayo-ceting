@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>@yield('title') | AYOCETING</title>
+    
+    @php
+        $title = env('SETTING_CORE_APP') == 1 ? env('AYOCETING_APP_TITLE') : env('GEMOI_APP_TITLE'); 
+    @endphp
+    <title>@yield('title') | {{$title}}</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -86,23 +90,6 @@
     <script src="{{asset('dist/js/scripts.js')}}"></script>
     <script src="{{asset('dist/js/custom.js')}}"></script>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
-            let session = "{{Session::get('isLogin')}}";
-            if (session == true) {
-                localStorage.setItem('name', "{{Session::get('name')}}");
-            }
-
-            const userLogged = document.querySelector('.user-logged');
-            const userImg = document.getElementById('userImg');
-            const name = localStorage.getItem('name');
-        
-            userLogged.innerHTML += localStorage.getItem('name');
-            userImg.src = `https://ui-avatars.com/api/?background=FBFBFB&name=${name}`;
-        });
-
-    </script>
-
     <script src="{{asset('dist/datatables/datatables.net/js/jquery.dataTables.min.js')}}"></script>
     <script src="{{asset('dist/datatables/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 
@@ -131,7 +118,7 @@
         const messageCollection = firestore.collection('message');
 
         const pengaduanId = "{{$pengaduanId ?? ''}}";
-        const loggedUser = "{{$loggedUser ?? ''}}";
+        const loggedUser = "{{$_auth['id']}}";
         const userIdPengaduan = "{{$userIdPengaduan ?? ''}}";
 
         if (pengaduanId != '') {
@@ -140,21 +127,37 @@
             const message = document.querySelector('.message');
 
             messageCollection.orderBy("timestamp", "asc").onSnapshot(function(snapshot) {
-                var messageTemp = '';
                 if (!snapshot.empty) {
+                    let messageTemp = '';
+                    let groupDateText = '';
+                    let tempDate = '';
+
                     snapshot.forEach(function(doc) {
-                        var data = doc.data();
+                        let data = doc.data();
                         
                         if (data.pengaduan_id == pengaduanId) {
-                            let created_at = formatTimestampToHHMM(data.timestamp);
+                            let dateFormatToHHMM = formatTimestampToHHMM(data.timestamp);
+                            let dateFormatToDmY = formatTimestampToDate(data.timestamp);
                             let position = loggedUser == data.sender ? 'chat-right' : '';
                             
+                            if (tempDate != dateFormatToDmY) {
+                                tempDate = dateFormatToDmY;
+                                groupDateText = `
+                                    <div class="row justify-content-center mb-3">
+                                        <span class="btn btn-sm btn-light disabled text-center">${dateFormatToDmY}</span>
+                                    </div>
+                                `;
+                            } else {
+                                groupDateText = '';
+                            }
+
                             messageTemp += `
+                            ${groupDateText}
                             <div class="chat-item ${position}">
                                 <div class="chat-details">
                                     <div class="chat-text">
                                         ${data.message}
-                                        <div class="chat-time">${created_at}</div>    
+                                        <div class="chat-time">${dateFormatToHHMM}</div>    
                                     </div>
                                 </div>
                             </div>
@@ -197,10 +200,18 @@
             }
 
             function formatTimestampToHHMM(timestamp) {
-                var date = new Date(timestamp.seconds * 1000);
-                var hours = date.getHours().toString().padStart(2, '0');
-                var minutes = date.getMinutes().toString().padStart(2, '0');
+                let date = new Date(timestamp.seconds * 1000);
+                let hours = date.getHours().toString().padStart(2, '0');
+                let minutes = date.getMinutes().toString().padStart(2, '0');
                 return `${hours}:${minutes}`;
+            }
+
+            function formatTimestampToDate(timestamp) {
+                let date = new Date(timestamp.seconds * 1000); 
+                let year = date.getFullYear();
+                let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                let day = date.getDate().toString().padStart(2, '0');
+                return `${day}-${month}-${year}`;
             }
 
         }

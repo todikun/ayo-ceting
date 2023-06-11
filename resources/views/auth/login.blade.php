@@ -5,7 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login | AYOCETING</title>
+    @php
+    $title = env('SETTING_CORE_APP') == 1 ? env('AYOCETING_APP_TITLE') : env('GEMOI_APP_TITLE');
+    @endphp
+    <title>Login | {{$title}}</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -82,7 +85,10 @@
                         Powered by <a href="#">DISKOMINFO KOTA PADANG</a>
                     </div> --}}
                     <div class="simple-footer">
-                        Copyright 2023 &copy; <div class="bullet"></div> AYOCETING v1.0.0 <br>
+                        @php
+                        $footer = env('SETTING_CORE_APP') == 1 ? env('AYOCETING_APP_FOOTER') : env('GEMOI_APP_FOOTER');
+                        @endphp
+                        {!!$footer!!}
                         Powered by <a href="#">DISKOMINFO KOTA PADANG</a>
                     </div>
                 </div>

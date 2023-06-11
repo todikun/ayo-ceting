@@ -22,40 +22,13 @@
                             <th width="1%">#</th>
                             <th scope="col">NAMA</th>
                             <th scope="col">KATEGORI</th>
-                            <th scope="col">ISI PENGAJUAN</th>
+                            <th scope="col">ISI PENGADUAN</th>
                             <th scope="col">TANGGAL</th>
                             <th scope="col">_ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($pengajuan as $item)
-                        <tr>
-                            <td>{{$loop->iteration}}</td>
-                            <td>{{$item['user']['name']}}</td>
-                            <td>{{$item['category_pengajuan']['category_name']}}</td>
-                            <td>{{$item['isi_pengajuan']}}</td>
-                            <td>
-                                {{\Carbon\Carbon::parse($item['created_at'])->locale('id')->translatedFormat('j F Y')}}
-                            </td>
-                            <td>
-                                <div class="btn-group">
 
-                                    <a tabindex="0" class="btn btn-sm btn-danger" role="button" data-toggle="popover"
-                                        data-trigger="focus" title="" data-placement="right" data-content="
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore, labore."
-                                        data-original-title="Detail Vonis Awal">Detail Vonis Awal</a>
-
-                                    <a href="{{route('konsultasi.riwayat.detail', $item['id'])}}"
-                                        class="btn btn-sm btn-secondary btn-dark" title="Konsultasi">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                </div>
-                            </td>
-
-                        <tr>
-                            @empty
-                            <td colspan="50%" class="text-center">No data</td>
-                            @endforelse
                     </tbody>
                 </table>
             </div>
@@ -63,3 +36,32 @@
     </div>
 </div>
 @endsection
+
+@push('script')
+<script>
+    $(document).ready(function(){
+        let table = $('#myTable').DataTable({
+            "autoWidth": false,
+            "processing": true,
+            "serverSide": true,
+            "orderable": true,
+            "ajax":{
+                "url": "{{route('konsultasi.riwayat')}}",
+                "dataType": "json",
+                "type": "GET",
+                "data":function(d) {
+                    d._token = "{{csrf_token()}}"
+                },
+            },
+            "columns": [
+                { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+                { data: 'user' },
+                { data: 'category_pengajuan' },
+                { data: 'isi_pengajuan' },
+                { data: 'created_at' },
+                { data: '_action' }
+            ]
+        });
+    });
+</script>
+@endpush
