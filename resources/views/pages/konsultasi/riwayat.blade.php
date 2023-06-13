@@ -24,6 +24,7 @@
                             <th scope="col">KATEGORI</th>
                             <th scope="col">ISI PENGADUAN</th>
                             <th scope="col">TANGGAL</th>
+                            <th scope="col">VONIS AWAL</th>
                             <th scope="col">_ACTION</th>
                         </tr>
                     </thead>
@@ -59,6 +60,7 @@
                 { data: 'category_pengajuan' },
                 { data: 'isi_pengajuan' },
                 { data: 'created_at' },
+                { data: 'vonis_awal' },
                 { data: '_action' }
             ]
         });

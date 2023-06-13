@@ -122,6 +122,9 @@ class KonsultasiController extends Controller
                         ->editColumn('category_pengajuan', function($row) {
                             return $row->category_pengajuan['category_name'];
                         })
+                        ->editColumn('vonis_awal', function($row) {
+                            return $row->vonis_awal['vonis'];
+                        })
                         ->editColumn('created_at', function($row) {
                             $date = Carbon::parse($row->created_at)
                                             ->locale('id')
