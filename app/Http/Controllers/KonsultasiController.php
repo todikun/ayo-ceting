@@ -152,7 +152,15 @@ class KonsultasiController extends Controller
     
     public function riwayatKonsultasiDetail(Request $request, $id)
     {
-        return view('pages.konsultasi.riwayat-detail');
+        $url = $this->apiUrl.'pengajuan/'.$id;
+        $body = get_data_api($url, $request->cookie('api_token'));
+        
+        return view('pages.konsultasi.riwayat-detail', [
+            'pengajuan' => $body['data'],
+                'pengaduanId' => $body['data']['id'],
+                'userIdPengaduan' => $body['data']['user_id'],
+                'userNamePengaduan' => $body['data']['user']['name'],
+        ]);
     }
 
     private function filterData($array, $diskusiStatus)

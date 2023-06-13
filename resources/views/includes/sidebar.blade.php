@@ -41,7 +41,7 @@
                     <li class="{{Route::is(['konsultasi.index', 'konsultasi.message']) ? 'active':''}}"><a
                             class="nav-link" href="{{route('konsultasi.index')}}">Konsultasi</a>
                     </li>
-                    <li class="{{Route::is('konsultasi.riwayat') ? 'active':''}}"><a class="nav-link"
+                    <li class="{{Route::is(['konsultasi.riwayat', 'konsultasi.riwayat.detail']) ? 'active':''}}"><a class="nav-link"
                             href="{{route('konsultasi.riwayat')}}">Riwayat Konsultasi</a>
                     </li>
                 </ul>
