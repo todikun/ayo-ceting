@@ -16,11 +16,10 @@
         <div class="card chat-box" id="mychatbox">
             <div class="card-header">
                 <div class="col">
-
-                    <h4>{{$_auth['name']}}</h4>
+                    <h4>{{$userNamePengaduan}}</h4>
                 </div>
                 <div class="col text-right">
-                    <button class="btn btn-danger" onclick="endChat(event)">End Chat</button>
+                    <button class="btn btn-danger" type="button" onclick="endChat()">End Chat</button>
                 </div>
             </div>
             <div class="card-body chat-content">
@@ -32,8 +31,10 @@
             </div>
             <div class="card-footer chat-form">
                 <form id="chat-form" onsubmit="addData(event)">
-                    <input type="text" name="message" class="form-control" id="messageInput" placeholder="Type a message">
-                    <button class="btn btn-primary" type="submit">
+                    <input type="text" name="message" class="form-control" id="messageInput"
+                        placeholder="Type a message">
+
+                    <button class="btn btn-primary" id="btnSend" type="submit">
                         <i class="far fa-paper-plane"></i>
                     </button>
                 </form>
@@ -46,16 +47,13 @@
                 <h4>Vonis awal</h4>
             </div>
             <div class="card-body chat-content">
-                <form id="vonis-form">
-                    <textarea name="vonis" id="vonis-input" class="form-control" style="height: 15rem;"
-                        required></textarea>
-                </form>
+                <textarea name="vonis" id="vonis-input" class="form-control" style="height: 250px;"></textarea>
             </div>
-            <div class="card-footer">
-                <button class="btn btn-secondary form-control" id="secondary-submit">Submit</button>
-                <button class="btn btn-primary form-control d-none" id="primary-submit"
-                    onclick="sendVonis(event)">Submit
-                </button>
+            <div class="card-footer chat-form">
+                <form id="vonis-form" onsubmit="sendVonis(event)">
+                    <input type="submit" name="message" class="bg-secondary form-control text-white" disabled
+                        style="padding-right: 0;" id="btnVonis" placeholder="Type a message" value="Submit">
+                </form>
             </div>
         </div>
     </div>
@@ -64,30 +62,25 @@
 
 @push('script')
 <script>
-    
-    function endChat(e) 
-    {
-        e.preventDefault();
-        const primarySubmit = document.getElementById('primary-submit');
-        const secondarySubmit = document.getElementById('secondary-submit');
+    const btnSend = document.getElementById('btnSend');
+    const btnVonis = document.getElementById('btnVonis');
 
-        primarySubmit.classList.remove('d-none');
-        secondarySubmit.classList.add('d-none');
+    function endChat() 
+    {
+        btnVonis.classList.remove('bg-secondary');
+        btnVonis.classList.add('bg-primary');
+        btnVonis.disabled = false;
     }
     
     function sendVonis(e)
     {
         e.preventDefault();
-        const form = document.getElementById('vonis-form');
-        const formData = new FormData(form);
-        const vonisInput = form.querySelectorAll('textarea');
+        const vonisInput = document.getElementById('vonis-input');
         const pengaduanId = "{{$pengaduanId}}";
         const token = "{{$_auth['token']}}";
-        const baseUrl = "{{url('/')}}"; 
 
-        if (vonisInput[0].value.trim() === '') {
-            vonisInput[0].focus();
-            
+        if (vonisInput.value.trim() === '') {
+            vonisInput.focus();
             iziToast.warning({
                 title: 'Warning',
                 message: 'Vonis tidak boleh kosong!',
@@ -97,12 +90,11 @@
                 transitionIn: 'fadeInUp',
                 transitionOut: 'fadeOutRight',
             });
-        }
-
-        fetch(`http://103.141.74.123:5000/vonis/${pengaduanId}`, {
+        } else {
+            fetch(`http://103.141.74.123:5000/vonis/${pengaduanId}`, {
                 method: "POST",
                 body: JSON.stringify({
-                    vonis: formData.get('vonis'),
+                    vonis: vonisInput.value,
                 }),
                 headers: {
                     "Authorization": `Bearer ${token}`,
@@ -113,6 +105,15 @@
                 return res.json();
             })
             .then(result => {
+                //btn send deactived
+                btnSend.classList.remove('btn-primary');
+                btnSend.classList.add('btn-secondary');
+                btnSend.disabled = true;
+                //btn vonis deactived
+                btnVonis.classList.remove('bg-primary');
+                btnVonis.classList.add('bg-secondary');
+                btnVonis.disabled = true;
+
                 iziToast.success({
                     title: 'Success',
                     message: result.meta.message,
@@ -122,9 +123,6 @@
                     transitionIn: 'fadeInUp',
                     transitionOut: 'fadeOutRight',
                 });
-                setTimeout(() => {
-                    window.location.replace(`${baseUrl}/pengaduan/list`);
-                }, 3000);
             })
             .catch(err => { 
                 iziToast.warning({
@@ -137,6 +135,7 @@
                     transitionOut: 'fadeOutRight',
                 });
             });
+        }
     }
 
 </script>

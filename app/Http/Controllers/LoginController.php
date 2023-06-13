@@ -48,8 +48,7 @@ class LoginController extends Controller
                             ->withCookie($cookie)
                             ->with(
                                 [
-                                    'name' => $name,
-                                    'isLogin' => true,
+                                    'isFirstLogin' => true,
                                 ]
                             );
             } else {

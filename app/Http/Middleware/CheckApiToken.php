@@ -19,14 +19,15 @@ class CheckApiToken
     public function handle(Request $request, Closure $next)
     {
         if ($request->hasCookie('api_token')) {
-            $payload = $this->decode_jwt_token($request->cookie('api_token'));    
+            $token = $request->cookie('api_token');
+            $payload = $this->decode_jwt_token($token);
             $value = [
                 'token' => $request->cookie('api_token'),
                 'id' => $payload->id ?? null,
-                'name' => $payload->name ?? 'Empty',
-                'username' => $payload->username ?? 'empty'
+                'name' => $payload->name,
+                'username' => $payload->username
             ];
-
+    
             view()->share('_auth', $value);
             return $next($request);
         } else {

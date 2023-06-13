@@ -37,7 +37,7 @@ Route::middleware('checkApiToken')->group(function() {
 
     Route::prefix('konsultasi/')->group(function() {
         Route::get('list', [KonsultasiController::class, 'index'])->name('konsultasi.index');
-        Route::get('recent/message', [KonsultasiController::class, 'recentMessage'])->name('konsultasi.message');
+        Route::post('recent/message', [KonsultasiController::class, 'recentMessage'])->name('konsultasi.message');
         Route::get('riwayat', [KonsultasiController::class, 'riwayatKonsultasi'])->name('konsultasi.riwayat');
         Route::get('riwayat/{id}', [KonsultasiController::class, 'riwayatKonsultasiDetail'])->name('konsultasi.riwayat.detail');
         

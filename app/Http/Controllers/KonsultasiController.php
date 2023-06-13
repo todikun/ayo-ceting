@@ -59,12 +59,17 @@ class KonsultasiController extends Controller
                         ->addColumn('_action', function($row){
 
                             $html = '
-                                    <div class="btn-group">
+                                    <div class="btn-group">            
 
-                                            <a href="'.route('konsultasi.message', ['pengaduan'=>$row->id, 'user_pengaduan'=>$row->user_id]).'" 
-                                                class="btn btn-primary" title="Konsultasi">
+                                        <form method="POST" action="'.route('konsultasi.message').'">
+                                            <input type="hidden" name="_token" value="'.csrf_token().'" />
+                                            <input type="hidden" name="id_pengaduan" value="'.$row->id.'" />
+                                            <input type="hidden" name="user_id_pengaduan" value="'.$row->user_id.'" />
+                                            <input type="hidden" name="user_name_pengaduan" value="'.$row->user['name'].'" />
+                                            <button type="submit" class="btn btn-primary" title="Konsultasi">
                                                 <i class="fas fa-comments"></i>
-                                            </a>
+                                            </button>
+                                        </form>
 
                                     </div>
 
@@ -79,13 +84,11 @@ class KonsultasiController extends Controller
     }
 
     public function recentMessage(Request $request)
-    {
-        $pengaduanId = request()->get('pengaduan');
-        $userIdPengaduan = request()->get('user_pengaduan');
-        
+    {   
         return view('pages.konsultasi.form-konsultasi', [
-            'pengaduanId' => $pengaduanId,
-            'userIdPengaduan' => $userIdPengaduan
+            'pengaduanId' => $request->id_pengaduan,
+            'userIdPengaduan' => $request->user_id_pengaduan,
+            'userNamePengaduan' => $request->user_name_pengaduan,
         ]);
     }
 

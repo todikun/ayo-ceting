@@ -4,11 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    
-    @php
-        $title = env('SETTING_CORE_APP') == 1 ? env('AYOCETING_APP_TITLE') : env('GEMOI_APP_TITLE'); 
-    @endphp
-    <title>@yield('title') | {{$title}}</title>
+    <title>@yield('title') | AYOCETING</title>
 
     <!-- General CSS Files -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -166,9 +162,7 @@
                     });
                     chatBubble.innerHTML = messageTemp;
                     chatContent.scrollTop = chatContent.scrollHeight;
-                } else {
-                    chatBubble.innerHTML = '<h4 class="text-center">Chat is empty</h4>';
-                }
+                } 
                 
             }, function(error) {
                 console.log('Firestore error:', error);
@@ -181,9 +175,9 @@
                 // Data to be added
                 const data = {
                     message: e.target.elements.message.value,
-                    pengaduan_id: pengaduanId,
-                    receiver: userIdPengaduan,
-                    sender: loggedUser,
+                    pengaduan_id: Number(pengaduanId),
+                    receiver: Number(userIdPengaduan),
+                    sender: Number(loggedUser),
                     timestamp: new Date()
                 };
                 
@@ -209,9 +203,14 @@
             function formatTimestampToDate(timestamp) {
                 let date = new Date(timestamp.seconds * 1000); 
                 let year = date.getFullYear();
-                let month = (date.getMonth() + 1).toString().padStart(2, '0');
+                let monthIndex = date.getMonth();
+                let monthNames = [
+                    'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+                    'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+                ];
+                let month = monthNames[monthIndex];
                 let day = date.getDate().toString().padStart(2, '0');
-                return `${day}-${month}-${year}`;
+                return `${day} ${month} ${year}`;
             }
 
         }
