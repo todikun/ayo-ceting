@@ -1,11 +1,7 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
-
-        @php
-        $title = env('SETTING_CORE_APP') == 1 ? env('AYOCETING_APP_TITLE') : env('GEMOI_APP_TITLE');
-        @endphp
         <div class="sidebar-brand">
-            <a href="{{route('dashboard')}}">{{$title}}</a>
+            <a href="{{route('dashboard')}}">AYOCETING</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
             <a href="{{route('dashboard')}}">**</a>
