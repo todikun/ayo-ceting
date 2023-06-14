@@ -2,13 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
+use App\Traits\{ConvertDate, TooltipDisplayHTML};
 
 class PengaduanController extends Controller
 {
-    
+    use ConvertDate, TooltipDisplayHTML;
     private $apiUrl;
 
     public function __construct()
@@ -47,10 +49,10 @@ class PengaduanController extends Controller
                             return $row->category_pengajuan['category_name'];
                         })
                         ->editColumn('created_at', function($row) {
-                            $date = Carbon::parse($row->created_at)
-                                            ->locale('id')
-                                            ->translatedFormat('j F Y');
-                            return $date;
+                            return $this->convertDate($row->created_at);
+                        })
+                        ->addColumn('_isi_pengajuan', function($row) {
+                            return $this->tooltipDisplayHTML($row->isi_pengajuan);
                         })
                         ->addColumn('_status', function($row) {
                             $html = '<span class="badge badge-secondary text-dark">'.$row->status.'</span>';
@@ -84,7 +86,7 @@ class PengaduanController extends Controller
 
                             return $html;
                         })
-                        ->rawColumns(['_status', '_action'])
+                        ->rawColumns(['_isi_pengajuan', '_status', '_action'])
                         ->toJson();
         return $datatables;
     }
@@ -128,10 +130,10 @@ class PengaduanController extends Controller
                             return $row->category_pengajuan['category_name'];
                         })
                         ->editColumn('created_at', function($row) {
-                            $date = Carbon::parse($row->created_at)
-                                            ->locale('id')
-                                            ->translatedFormat('j F Y');
-                            return $date;
+                            return $this->convertDate($row->created_at);
+                        })
+                        ->addColumn('_isi_pengajuan', function($row) {
+                            return $this->tooltipDisplayHTML($row->isi_pengajuan);
                         })
                         ->addColumn('_status', function($row) {
                             $html = '';
@@ -142,7 +144,7 @@ class PengaduanController extends Controller
                             }
                             return $html;
                         })
-                        ->rawColumns(['_status'])
+                        ->rawColumns(['_isi_pengajuan', '_status'])
                         ->toJson();
         return $datatables;
     }

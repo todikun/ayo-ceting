@@ -58,11 +58,15 @@
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'user' },
                 { data: 'category_pengajuan' },
-                { data: 'isi_pengajuan' },
+                { data: '_isi_pengajuan' },
                 { data: 'created_at' },
-                { data: 'vonis_awal' },
+                { data: '_vonis_awal' },
                 { data: '_action' }
             ]
+        });
+
+        table.on('draw.dt', function(){
+            $('[data-toggle="tooltip"]').tooltip();
         });
     });
 </script>

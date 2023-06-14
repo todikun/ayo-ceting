@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\DecodeJWT;
+use Carbon\Carbon;
+use App\Traits\{ConvertDate, DecodeJWT, TooltipDisplayHTML};
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
-use Carbon\Carbon;
 
 class KonsultasiController extends Controller
 {
-    use DecodeJWT;
+    use ConvertDate, DecodeJWT, TooltipDisplayHTML;
     private $apiUrl;
 
     public function __construct()
@@ -47,10 +48,10 @@ class KonsultasiController extends Controller
                             return $row->category_pengajuan['category_name'];
                         })
                         ->editColumn('created_at', function($row) {
-                            $date = Carbon::parse($row->created_at)
-                                            ->locale('id')
-                                            ->translatedFormat('j F Y');
-                            return $date;
+                            return $this->convertDate($row->created_at);
+                        })
+                        ->addColumn('_isi_pengajuan', function($row) {
+                            return $this->tooltipDisplayHTML($row->isi_pengajuan);
                         })
                         ->addColumn('_status', function($row) {
                             $html = '<span class="badge badge-success">Active</span>';
@@ -73,12 +74,11 @@ class KonsultasiController extends Controller
 
                                     </div>
 
-                                    
                                     ';
 
                             return $html;
                         })
-                        ->rawColumns(['_status', '_action'])
+                        ->rawColumns(['_isi_pengajuan', '_status', '_action'])
                         ->toJson();
         return $datatables;
     }
@@ -122,14 +122,14 @@ class KonsultasiController extends Controller
                         ->editColumn('category_pengajuan', function($row) {
                             return $row->category_pengajuan['category_name'];
                         })
-                        ->editColumn('vonis_awal', function($row) {
-                            return $row->vonis_awal['vonis'];
+                        ->addColumn('_isi_pengajuan', function($row) {
+                            return $this->tooltipDisplayHTML($row->isi_pengajuan);
+                        })
+                        ->addColumn('_vonis_awal', function($row) {
+                            return $this->tooltipDisplayHTML($row->vonis_awal['vonis']);
                         })
                         ->editColumn('created_at', function($row) {
-                            $date = Carbon::parse($row->created_at)
-                                            ->locale('id')
-                                            ->translatedFormat('j F Y');
-                            return $date;
+                            return $this->convertDate($row->created_at);
                         })
                         ->addColumn('_action', function($row){
 
@@ -145,7 +145,7 @@ class KonsultasiController extends Controller
 
                             return $html;
                         })
-                        ->rawColumns(['_action'])
+                        ->rawColumns(['_isi_pengajuan', '_vonis_awal', '_action'])
                         ->toJson();
         return $datatables;
     }

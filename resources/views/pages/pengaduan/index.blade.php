@@ -58,7 +58,7 @@
                 { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
                 { data: 'user' },
                 { data: 'category_pengajuan' },
-                { data: 'isi_pengajuan' },
+                { data: '_isi_pengajuan' },
                 { data: 'created_at' },
                 { data: '_status' },
                 { data: '_action' }
@@ -66,6 +66,8 @@
         });
 
         table.on('draw.dt', function(){
+            $('[data-toggle="tooltip"]').tooltip();
+            
             var btnKonfirmasi = document.querySelectorAll('.konfirmasi');
             btnKonfirmasi.forEach(function(button){
                 button.addEventListener('click', function(){

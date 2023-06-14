@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Carbon\Carbon;
+use App\Traits\ConvertDate;
 use Illuminate\Http\Request;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Http;
@@ -16,6 +17,7 @@ class EdukasiController extends Controller
      * @return \Illuminate\Http\Response
      */
     
+    use ConvertDate;
     private $apiUrl;
 
     public function __construct()
@@ -46,10 +48,7 @@ class EdukasiController extends Controller
         $datatables = DataTables::of($object)
                         ->addIndexColumn()
                         ->editColumn('created_at', function($row) {
-                            $date = Carbon::parse($row->created_at)
-                                            ->locale('id')
-                                            ->translatedFormat('j F Y');
-                            return $date;
+                            return $this->convertDate($row->created_at);
                         })
                         ->addColumn('_action', function($row){
 

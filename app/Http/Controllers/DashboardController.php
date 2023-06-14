@@ -27,45 +27,50 @@ class DashboardController extends Controller
         $body = get_data_api($url, $request->cookie('api_token'));
         
         // filter data
-        $approved = $this->filterDataByThisMonth($body['data'], 'approved', null);
-        $rejected = $this->filterDataByThisMonth($body['data'], 'rejected', null);
-        $pending = $this->filterDataByThisMonth($body['data'], 'pending', null);
-        $all = $this->filterDataByThisMonth($body['data'], null, null);
-        $diriSendiri = $this->filterDataByThisMonth($body['data'], null, 1); // 1 = diri sendiri
-        $orangLain = $this->filterDataByThisMonth($body['data'], null, 2); // 2 = orang lain
+        $date = [
+            'month' => request()->get('bulan') ?? Carbon::now()->month, 
+            'year' => Carbon::now()->year
+        ];
+
+        $approved = $this->filterDataByThisMonth($body['data'], $date, 'approved', null);
+        $rejected = $this->filterDataByThisMonth($body['data'], $date, 'rejected', null);
+        $pending = $this->filterDataByThisMonth($body['data'], $date, 'pending', null);
+        $all = $this->filterDataByThisMonth($body['data'], $date, null, null);
+        $diriSendiri = $this->filterDataByThisMonth($body['data'], $date, null, 1); // 1 = diri sendiri
+        $orangLain = $this->filterDataByThisMonth($body['data'], $date, null, 2); // 2 = orang lain
+        $bulanList = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
 
         // chart
         $chart = $this->chart($body['data']);
         
         return view('pages.dashboard', compact(
-            'approved', 'rejected', 'pending', 'all', 'diriSendiri', 'orangLain', 'chart')
+            'approved', 'rejected', 'pending', 'all', 'diriSendiri', 'orangLain', 'chart', 'bulanList' , 'date')
         );
     }
 
-    private function filterDataByThisMonth($array, $status, $kategori)
+    private function filterDataByThisMonth($array, $monthYear, $status, $kategori)
     {
         $result = [];
         
-        // filter by this month
-        $month = Carbon::now()->month;
-        $year = Carbon::now()->year;
-        
         if ($status != null) {
             // by status
-            $result = array_filter($array, function($item) use ($month, $year, $status) {
+            $result = array_filter($array, function($item) use ($monthYear, $status) {
                 $date = Carbon::parse($item['created_at']);
-                return $date->month == $month && $date->year == $year && $item['status'] == $status;
+                return $date->month == $monthYear['month'] && $date->year == $monthYear['year'] && $item['status'] == $status;
             });
         } else if ($kategori != null) {
             // by kategori
-            $result = array_filter($array, function($item) use ($month, $year, $kategori) {
+            $result = array_filter($array, function($item) use ($monthYear, $kategori) {
                 $date = Carbon::parse($item['created_at']);
-                return $date->month == $month && $date->year == $year && $item['category_pengajuan']['id'] == $kategori;
+                return $date->month == $monthYear['month'] && $date->year == $monthYear['year'] && $item['category_pengajuan']['id'] == $kategori;
             });
         } else {
-            $result = array_filter($array, function($item) use ($month, $year) {
+            $result = array_filter($array, function($item) use ($monthYear) {
                 $date = Carbon::parse($item['created_at']);
-                return $date->month == $month && $date->year == $year;
+                return $date->month == $monthYear['month'] && $date->year == $monthYear['year'];
             });
         }
 
@@ -84,7 +89,7 @@ class DashboardController extends Controller
          * Perulangan untuk mengecek pengaduan tiap bulan
          */
         for ($i = 0; $i < 12; $i++) {
-            $temp_diri_sendiri = array_filter($data, function($item) use($year, $month) {
+            $temp_diri_sendiri = array_filter($data, function($item) use ($year, $month) {
                 $date = Carbon::parse($item['created_at']);
                 return $date->month == $month && $date->year == $year && $item['category_pengajuan']['id'] == 1;
             });

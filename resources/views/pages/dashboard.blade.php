@@ -12,8 +12,22 @@
 @endsection
 
 @section('content-body')
-<h2 class="section-title">Pengaduan {{\Carbon\Carbon::now()->locale('id')->translatedFormat('F Y')}}</h2>
-
+<div class="d-flex">
+    <div class="col-8">
+        <h2 class="section-title">
+            Pengaduan {{\Carbon\Carbon::parse($date['year'].'-'.$date['month'])->locale('id')->translatedFormat('F Y')}}
+        </h2>
+    </div>
+    <div class="col d-flex justify-content-center align-items-center">
+        <select name="bulan" id="bulan" class="form-control" onchange="submitBulan(this)">
+            <option value="">--PILIH BULAN--</option>
+            @foreach ($bulanList as $item)
+            <option value="{{$loop->iteration}}" {{request('bulan')==$loop->iteration ?
+                'selected':''}}>{{$bulanList[$loop->iteration - 1]}}</option>
+            @endforeach
+        </select>
+    </div>
+</div>
 <div class="row">
     <div class="col-lg-3 col-md-6 col-sm-6 col-12">
         <div class="card card-statistic-1">
@@ -129,6 +143,42 @@
 
 @push('script')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+<script>
+    function submitBulan(element) {
+        let url = "{{route('dashboard')}}";
+
+        if (element.value.trim() === '') {
+            iziToast.error({
+                title: 'Warning',
+                message: 'Bulan tidak boleh kosong!',
+                position: 'topRight',    
+                timeout: 2500,
+                drag: false,
+                transitionIn: 'fadeInUp',
+                transitionOut: 'fadeOutRight',
+            });
+            element.focus();
+            return;
+        } 
+
+        Swal.fire({
+            title: 'Memuat',
+            html: 'Tunggu sebentar...',
+            timerProgressBar: true,
+            allowOutsideClick: false, 
+            showConfirmButton: false,
+            timer: 2000,
+            onBeforeOpen: () => {
+                Swal.showLoading();
+            },
+            onClose: () => {
+                window.location.replace(`${url}?bulan=${element.value}`);
+            }
+        });
+    }
+</script>
 
 <script>
     var series = @json($chart); 
