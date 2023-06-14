@@ -98,17 +98,11 @@
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-    <script src="{{asset('dist/js/decrypt.js')}}"></script>
+    <script src="{{asset('dist/js/firebase-config.js')}}"></script>
 
     <script>
-        // Your web app's Firebase configuration
-        const encryptedFirebaseConfig = "{{env('ENCRYPT_FIREBASE_CONFIG')}}";
-        const key = "{{env('CHIPER_KEY')}}";
-
-        const firebaseConfig = decryptFirebaseConfig(encryptedFirebaseConfig, key);
-        
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        firebase.initializeApp(firebaseConfig());
 
         const firestore = firebase.firestore();
         const messageCollection = firestore.collection('message');

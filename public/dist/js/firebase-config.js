@@ -1,6 +1,7 @@
-function decryptFirebaseConfig(encryptedFirebaseConfig, key) {
+function firebaseConfig() {
+    var encryptedFirebaseConfig = 'U2FsdGVkX1+6TB9rxkqp0Ou8HKP5GUQ46eVRYx82LjUZ+qR5xm6JfKMwmystw42bkOQriLwIKFIfJtNvEVyJSfigBByRROi0jf9vfeX7Sca6ET2GNgfDfOdEQhWVCMgr8BM6YI5HdkBQ5LFmdDbj/KGke13Db2XV5czVBoUX0Gl6UuWjuIjrZ1yOIqvr0ZTJN4A0NzMUaZt0J6a3/PHcvMxr6S/FaTNAS5mqZgh0qhS7w1WrIWTLGgYEUiabNYYsfi0bDGNthUoY7bHUbW+u5g==';
     var decryptedFirebaseConfig = {};
-    var secretKey = decryptTextChiper(key);
+    var secretKey = decryptTextChiper();
 
     try {
         var decrypted = CryptoJS.AES.decrypt(encryptedFirebaseConfig, secretKey).toString(CryptoJS.enc.Utf8);
@@ -12,8 +13,9 @@ function decryptFirebaseConfig(encryptedFirebaseConfig, key) {
     return decryptedFirebaseConfig;
 }
 
-function decryptTextChiper(text) {
+function decryptTextChiper() {
     let shift = 5;
+    var text = 'M7foRuDppJSlwGrb0chcowaIVKdm0etgVHHPb4YeFbc5svASlM.jlta4321';
     var decryptedText = "";
     for (var i = 0; i < text.length; i++) {
         var char = text[i];
