@@ -68,13 +68,13 @@ class PengaduanController extends Controller
                                                 <i class="fas fa-eye"></i>
                                             </a>
 
-                                            <button data-id="'.$row->id.'" data-nama="'.$row->user['name'].'" data-status="approve"
+                                            <button data-id="'.$row->id.'" data-nama="'.$row->user['name'].'" data-status="Approve"
                                                 class="btn btn-sm btn-success konfirmasi"
                                                 title="Approve">
                                                 <i class="fas fa-check"></i>
                                             </button>
 
-                                            <button data-id="'.$row->id.'" data-nama="'.$row->user['name'].'" data-status="reject"
+                                            <button data-id="'.$row->id.'" data-nama="'.$row->user['name'].'" data-status="Reject"
                                                 class="btn btn-sm btn-danger konfirmasi"
                                                 title="Reject">
                                                 <i class="fas fa-times"></i>

@@ -15,7 +15,16 @@
 <div class="d-flex">
     <div class="col-8">
         <h2 class="section-title">
-            Pengaduan {{\Carbon\Carbon::parse($date['year'].'-'.$date['month'])->locale('id')->translatedFormat('F Y')}}
+            @php
+            $invalid = false;
+            try {
+            $res = \Carbon\Carbon::parse($date['year'].'-'.$date['month'])->locale('id')->translatedFormat('F Y');
+            } catch (\Throwable $th) {
+            $invalid = true;
+            $res = 'Format Bulan Tidak Valid!';
+            }
+            @endphp
+            Pengaduan <strong class="{{$invalid == true ? 'text-danger':''}}">{{$res}}</strong>
         </h2>
     </div>
     <div class="col d-flex justify-content-center align-items-center">
@@ -143,7 +152,6 @@
 
 @push('script')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
 <script>
     function submitBulan(element) {

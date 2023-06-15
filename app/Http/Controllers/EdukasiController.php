@@ -65,9 +65,19 @@ class EdukasiController extends Controller
                                         <i class="fas fa-edit"></i>
                                     </a>
 
+                                    
                                 </div>
                             
                             ';
+
+                            // btn hapus
+                            // <form action="'.route('edukasi.destroy', $row->slug).'" method="POST">
+                            //     <input type="hidden" name="_token" value="'.csrf_token().'"/>
+                            //     <input type="hidden" name="_method" value="DELETE"/>
+                            //     <button class="btn btn-sm btn-danger"title="Hapus">
+                            //         <i class="fas fa-times"></i>
+                            //     </button>
+                            // </form>
 
                             return $html;
                         })
@@ -170,12 +180,6 @@ class EdukasiController extends Controller
         ];
 
         $body = put_data_api($url, $request->cookie('api_token'), $data);
-        
-        if ($body['meta']['code'] === 200) {
-            toastr()->success($body['meta']['message']);
-        } else {
-            toastr()->error($body['meta']['message']);
-        }
 
         return redirect()->route('edukasi.index'); 
     }
@@ -190,12 +194,6 @@ class EdukasiController extends Controller
     {
         $url = $this->apiUrl.'edukasi/'.$id;
         $body = delete_data_api($url, $request->cookie('api_token'));
-        
-        if ($body['meta']['code'] === 200) {
-            toastr()->success($body['meta']['message']);
-        } else {
-            toastr()->error($body['meta']['message']);
-        }
         
         return redirect()->route('edukasi.index');
     }

@@ -78,6 +78,7 @@
         const vonisInput = document.getElementById('vonis-input');
         const pengaduanId = "{{$pengaduanId}}";
         const token = "{{$_auth['token']}}";
+        const url = `http://103.141.74.123:5000/vonis/${pengaduanId}`;
 
         if (vonisInput.value.trim() === '') {
             vonisInput.focus();
@@ -91,50 +92,64 @@
                 transitionOut: 'fadeOutRight',
             });
         } else {
-            fetch(`http://103.141.74.123:5000/vonis/${pengaduanId}`, {
-                method: "POST",
-                body: JSON.stringify({
-                    vonis: vonisInput.value,
-                }),
-                headers: {
-                    "Authorization": `Bearer ${token}`,
-                    "Content-type": "application/json; charset=UTF-8"
+            Swal.fire({
+                title: 'Vonis Awal',
+                text: 'Apakah anda yakin submit vonis awal untuk pengaduan ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, submit!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: url,
+                        method: "POST",
+                        dataType: "JSON",
+                        data: JSON.stringify({
+                            vonis: vonisInput.value
+                        }),
+                        headers: {
+                            "Authorization": `Bearer ${token}`,
+                            "Content-type": "application/json; charset=UTF-8"
+                        },
+                        success: function(data) {
+                            if (data.meta.success) {
+                                //btn send deactived
+                                btnSend.classList.remove('btn-primary');
+                                btnSend.classList.add('btn-secondary');
+                                btnSend.disabled = true;
+                                //btn vonis deactived
+                                btnVonis.classList.remove('bg-primary');
+                                btnVonis.classList.add('bg-secondary');
+                                btnVonis.disabled = true;
+
+                                iziToast.success({
+                                    title: 'Success',
+                                    message: data.meta.message,
+                                    position: 'topRight',    
+                                    timeout: 2500,
+                                    drag: false,
+                                    transitionIn: 'fadeInUp',
+                                    transitionOut: 'fadeOutRight',
+                                });
+                            } else {
+                                iziToast.error({
+                                    title: 'Error',
+                                    message: 'Network Error',
+                                    position: 'topRight',    
+                                    timeout: 2500,
+                                    drag: false,
+                                    transitionIn: 'fadeInUp',
+                                    transitionOut: 'fadeOutRight',
+                                });
+                            }
+                        },
+                    });
                 }
             })
-            .then(res => {
-                return res.json();
-            })
-            .then(result => {
-                //btn send deactived
-                btnSend.classList.remove('btn-primary');
-                btnSend.classList.add('btn-secondary');
-                btnSend.disabled = true;
-                //btn vonis deactived
-                btnVonis.classList.remove('bg-primary');
-                btnVonis.classList.add('bg-secondary');
-                btnVonis.disabled = true;
 
-                iziToast.success({
-                    title: 'Success',
-                    message: result.meta.message,
-                    position: 'topRight',    
-                    timeout: 2500,
-                    drag: false,
-                    transitionIn: 'fadeInUp',
-                    transitionOut: 'fadeOutRight',
-                });
-            })
-            .catch(err => { 
-                iziToast.warning({
-                    title: 'Warning',
-                    message: 'Network error!',
-                    position: 'topRight',    
-                    timeout: 2500,
-                    drag: false,
-                    transitionIn: 'fadeInUp',
-                    transitionOut: 'fadeOutRight',
-                });
-            });
+            
         }
     }
 

@@ -67,55 +67,6 @@
 
         table.on('draw.dt', function(){
             $('[data-toggle="tooltip"]').tooltip();
-            
-            var btnKonfirmasi = document.querySelectorAll('.konfirmasi');
-            btnKonfirmasi.forEach(function(button){
-                button.addEventListener('click', function(){
-                    let id = button.dataset.id;
-                    let status = button.dataset.status;
-                    let nama = button.dataset.nama;
-                    let url = `http://103.141.74.123:5000/pengajuan/${status}/${id}`;
-                    let token = @json($token);
-
-                    if (confirm(`Apakah anda yakin ${status} pengaduan dari ${nama}?`) == true) {  
-                        fetch(url, {
-                            method: "PUT",
-                            body: JSON.stringify({}),
-                            headers: {
-                                "Authorization": `Bearer ${token}`,
-                                "Content-type": "application/json; charset=UTF-8"
-                            }
-                        })
-                        .then(res =>{
-                            return res.json();
-                        })
-                        .then(result => {
-                            iziToast.success({
-                                title: 'Success',
-                                message: result.meta.message,
-                                position: 'topRight',    
-                                timeout: 2500,
-                                drag: false,
-                                transitionIn: 'fadeInUp',
-                                transitionOut: 'fadeOutRight',
-                            });
-                            table.ajax.reload();
-                        })
-                        .catch(err => {
-                            console.log('err',err);
-                            iziToast.error({
-                                title: 'Error',
-                                message: 'Network Error',
-                                position: 'topRight',    
-                                timeout: 2500,
-                                drag: false,
-                                transitionIn: 'fadeInUp',
-                                transitionOut: 'fadeOutRight',
-                            });
-                        });
-                    } 
-                });
-            });
 
             var btnDetail = document.querySelectorAll('.btn-detail');
             btnDetail.forEach(function(button){
@@ -139,6 +90,62 @@
                     }); 
                 });
             });
+
+            $(document).on('click', '.konfirmasi', function() {
+                let id = $(this).data('id');
+                let nama = $(this).data('nama');
+                let status = $(this).data('status');
+                let url = `http://103.141.74.123:5000/pengajuan/${status.toLowerCase()}/${id}`;
+                let token = @json($token);
+                
+                Swal.fire({
+                    title: `${status} pengaduan`,
+                    text: `Apakah anda yakin ${status} pengaduan dari ${nama}?`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya, proses!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            url: url,
+                            method: "PUT",
+                            dataType: "JSON",
+                            data: {},
+                            headers: {
+                                "Authorization": `Bearer ${token}`,
+                                "Content-type": "application/json; charset=UTF-8"
+                            },
+                            success: function(data) {
+                                if (data.meta.success) {
+                                    iziToast.success({
+                                        title: 'Success',
+                                        message: data.meta.message,
+                                        position: 'topRight',    
+                                        timeout: 2500,
+                                        drag: false,
+                                        transitionIn: 'fadeInUp',
+                                        transitionOut: 'fadeOutRight',
+                                    });
+                                    table.ajax.reload();
+                                } else {
+                                    iziToast.error({
+                                        title: 'Error',
+                                        message: 'Network Error',
+                                        position: 'topRight',    
+                                        timeout: 2500,
+                                        drag: false,
+                                        transitionIn: 'fadeInUp',
+                                        transitionOut: 'fadeOutRight',
+                                    });
+                                }
+                            },
+                        });
+                    }
+                })
+            });
+
         });
 
     });

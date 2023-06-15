@@ -90,6 +90,7 @@
     <script src="{{asset('dist/datatables/datatables.net-bs4/js/dataTables.bootstrap4.min.js')}}"></script>
 
     <script src="{{asset('dist/iziToast/js/iziToast.min.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 
     <!-- Page Specific JS File -->
     @stack('script')
