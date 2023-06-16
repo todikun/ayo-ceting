@@ -158,8 +158,8 @@
         let url = "{{route('dashboard')}}";
 
         if (element.value.trim() === '') {
-            iziToast.error({
-                title: 'Warning',
+            iziToast.warning({
+                // title: 'Warning',
                 message: 'Bulan tidak boleh kosong!',
                 position: 'topRight',    
                 timeout: 2500,

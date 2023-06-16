@@ -95,7 +95,7 @@
             dataType: 'HTML',
             method: 'GET',
             success: function (result) {
-                $('#modal-form').find('.modal-title').html('Detail Nontender');
+                $('#modal-form').find('.modal-title').html('Detail Edukasi');
                 $('#modal-form').find('.modal-body').html(result);
                 $('#modal-form').modal('show');
             },

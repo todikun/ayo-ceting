@@ -2,23 +2,19 @@
 
 namespace App\Traits;
 
+use Illuminate\Support\Str;
+
 /**
  * 
- * Diplay Tooltip on HTML 
+ * Display Tooltip on HTML 
  */
 trait TooltipDisplayHTML 
 {
     public function tooltipDisplayHTML($str)
     {
-        $arrText = explode(' ', $str);
-        $limitDisplayText = 3;
-        $displayText = '';
-
-        if (sizeof($arrText) > $limitDisplayText) {
-            $displayText = $arrText[0] .' '. $arrText[1] .' '. $arrText[2] .' ...';
-            return $html = '<a href="#" class="text-decoration-none" style="color: inherit;" data-toggle="tooltip" title="'.$str.'">'.$displayText.'</a>';
-        } 
+        $limitText = Str::words($str, 4, ' ...');
+        $html = '<a href="#" class="text-decoration-none" style="color: inherit;" data-toggle="tooltip" title="'.$str.'">'.$limitText.'</a>';
         
-        return $str;
+        return Str::endsWith($limitText, '...') ? $html : $limitText;
     }
 }

@@ -16,6 +16,7 @@
     <!-- Template CSS -->
     <link rel="stylesheet" href="{{asset('dist/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('dist/css/components.css')}}">
+    <link href="{{asset('dist/iziToast/css/iziToast.min.css')}}" rel="stylesheet">
 </head>
 
 <body>
@@ -100,8 +101,22 @@
     <!-- Template JS File -->
     <script src="{{asset('dist/js/scripts.js')}}"></script>
     <script src="{{asset('dist/js/custom.js')}}"></script>
+    <script src="{{asset('dist/iziToast/js/iziToast.min.js')}}"></script>
 
-
+    <script>
+        let error = "{{session('error')}}";
+        if (error != '') {
+            iziToast.warning({
+                // title: 'Warning',
+                message: error,
+                position: 'topRight',    
+                timeout: 2500,
+                drag: false,
+                transitionIn: 'fadeInUp',
+                transitionOut: 'fadeOutRight',
+            });
+        }
+    </script>
 </body>
 
 </html>

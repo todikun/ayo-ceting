@@ -51,9 +51,10 @@ class LoginController extends Controller
                                     'isFirstLogin' => true,
                                 ]
                             );
+            } else if ($statusCode === 200 && $roleName !== 'Administrator'){
+                return redirect()->route('login')->with('error', 'Unauthorized');
             } else {
-                toastr()->error($body['meta']['message']);
-                return redirect()->route('login');
+                return redirect()->route('login')->with('error', 'Username/password salah!');
             }
         } catch (RequestException $e) {
             if ($e->hasResponse()) {

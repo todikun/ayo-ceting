@@ -83,7 +83,7 @@
         if (vonisInput.value.trim() === '') {
             vonisInput.focus();
             iziToast.warning({
-                title: 'Warning',
+                // title: 'Warning',
                 message: 'Vonis tidak boleh kosong!',
                 position: 'topRight',    
                 timeout: 2500,
@@ -134,8 +134,8 @@
                                     transitionOut: 'fadeOutRight',
                                 });
                             } else {
-                                iziToast.error({
-                                    title: 'Error',
+                                iziToast.warning({
+                                    // title: 'Error',
                                     message: 'Network Error',
                                     position: 'topRight',    
                                     timeout: 2500,

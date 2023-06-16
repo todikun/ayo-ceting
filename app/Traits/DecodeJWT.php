@@ -24,6 +24,7 @@ trait DecodeJWT
             $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
             return $decoded;
         } catch (\Exception $e) {
+            dd($e->getMessage());
             return $e->getMessage();
         }
     }
