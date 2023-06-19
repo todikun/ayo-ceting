@@ -54,12 +54,11 @@
         </div>
     </form> --}}
 
-    <div id="map" style="height: 200px; width: 500px;"></div>
+    <div id="map" style="height: 200px; width: 100%;"></div>
 
     <script>
         var map = L.map('map').setView([-0.936542765043, 100.37384033203], 15);
         
-
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 19,
                 attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -68,5 +67,10 @@
                 maxZoom: 20,
                 subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
             }).addTo(map);
+
+            // re-render
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 200);
     </script>
 </div>
