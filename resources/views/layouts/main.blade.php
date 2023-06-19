@@ -19,6 +19,13 @@
     <link rel="stylesheet" href="{{asset('dist/datatables/datatables.net-bs4/css/dataTables.bootstrap4.min.css')}}">
     <link href="{{asset('dist/iziToast/css/iziToast.min.css')}}" rel="stylesheet">
 
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <!-- Page Specific CSS File -->
     @stack('css')
 </head>
@@ -115,7 +122,6 @@
         if (pengaduanId != '') {
             const chatContent = document.querySelector('.chat-content');
             const chatBubble = document.querySelector('.chat-content');
-            const message = document.querySelector('.message');
 
             messageCollection.orderBy("timestamp", "asc").onSnapshot(function(snapshot) {
                 if (!snapshot.empty) {
