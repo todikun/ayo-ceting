@@ -25,6 +25,7 @@
                             <th scope="col">ISI PENGADUAN</th>
                             <th scope="col">TANGGAL</th>
                             <th scope="col">STATUS</th>
+                            <th scope="col">ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -59,12 +60,36 @@
                 { data: 'category_pengajuan' },
                 { data: '_isi_pengajuan' },
                 { data: 'created_at' },
-                { data: '_status' }
+                { data: '_status' },
+                { data: '_action' }
             ]
         });
     
         table.on('draw.dt', function() {
             $('[data-toggle="tooltip"]').tooltip();
+
+            var btnDetail = document.querySelectorAll('.btn-detail');
+            btnDetail.forEach(function(button){
+                button.addEventListener('click', function(e){
+                    e.preventDefault();
+                    let url = button.href;
+
+                    $.ajax({
+                        url: url,
+                        dataType: 'HTML',
+                        method: 'GET',
+                        success: function (result) {
+                            console.log('result', result);
+                            $('#modal-form').find('.modal-title').html('Detail Pengaduan');
+                            $('#modal-form').find('.modal-body').html(result);
+                            $('#modal-form').modal('show');
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        },
+                    }); 
+                });
+            });
         });
     });
         

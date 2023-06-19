@@ -143,8 +143,20 @@ class PengaduanController extends Controller
                                 $html = '<span class="badge badge-danger">'.$row->status.'</span>';
                             }
                             return $html;
+                        })->addColumn('_action', function($row) {
+                            $html = '
+                                    <div class="btn-group">
+
+                                            <a href="'.route('pengaduan.show', $row->id).'" 
+                                                class="btn btn-sm btn-secondary btn-dark btn-detail" title="Detail">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                    </div>
+                                    ';
+
+                            return $html;
                         })
-                        ->rawColumns(['_isi_pengajuan', '_status'])
+                        ->rawColumns(['_isi_pengajuan', '_status', '_action'])
                         ->toJson();
         return $datatables;
     }
