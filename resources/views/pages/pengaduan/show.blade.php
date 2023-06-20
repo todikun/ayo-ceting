@@ -49,6 +49,16 @@
 
     <script>
         var map = L.map('map').setView(["{{$pengajuan['lokasi']['coordinates'][1]}}", "{{$pengajuan['lokasi']['coordinates'][0]}}"], 15);
+        var customIcon = L.icon({
+            iconUrl: "{{asset('dist/red-google-icon.png')}}",
+            // shadowUrl: 'https://cdn-icons-png.flaticon.com/512/2709/2709353.png',
+
+            iconSize: [50, 50], // size of the icon
+            // shadowSize:   [50, 64], // size of the shadow
+            // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+            // shadowAnchor: [4, 62],  // the same for the shadow
+            // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
         
         L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -61,7 +71,7 @@
 
         // marker
         L.marker(["{{$pengajuan['lokasi']['coordinates'][1]}}", "{{$pengajuan['lokasi']['coordinates'][0]}}"], {
-            // icon: greenIcon
+            icon: customIcon
         }).addTo(map);
 
         // re-render
