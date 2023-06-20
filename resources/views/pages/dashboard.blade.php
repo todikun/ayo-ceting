@@ -146,6 +146,14 @@
             </div>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-6 col-sm-6 col-12">
+            <div class="card card-statistic-1">
+                <div id="map" style="height: 500px; width: 100%;"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 @endsection
