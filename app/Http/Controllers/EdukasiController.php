@@ -116,14 +116,9 @@ class EdukasiController extends Controller
         ];
 
         $body = post_data_api($url, $request->cookie('api_token'), $data);
-        
-        if ($body['meta']['code'] === 200) {
-            toastr()->success($body['meta']['message']);
-        } else {
-            toastr()->error($body['meta']['message']);
-        }
-
-        return redirect()->route('edukasi.index'); 
+        return redirect()->route('edukasi.index')
+            ->with('success', $body['meta']['code'])
+            ->with('message', $body['meta']['message']); 
 
     }
 
@@ -181,7 +176,9 @@ class EdukasiController extends Controller
 
         $body = put_data_api($url, $request->cookie('api_token'), $data);
 
-        return redirect()->route('edukasi.index'); 
+        return redirect()->route('edukasi.index')
+                        ->with('success', $body['meta']['code'])
+                        ->with('message', $body['meta']['message']); 
     }
 
     /**

@@ -104,5 +104,30 @@
             },
         });
     });
+
+    // send alert
+    if ("{{Session::get('success')}}") {
+        if ("{{Session::get('success') == 200}}") {
+            iziToast.success({
+                title: 'Success',
+                message: "{{Session::get('message')}}",
+                position: 'topRight',    
+                timeout: 2500,
+                drag: false,
+                transitionIn: 'fadeInUp',
+                transitionOut: 'fadeOutRight',
+            });
+        } else {
+            iziToast.warning({
+                title: 'Warning',
+                message: "{{Session::get('message')}}",
+                position: 'topRight',    
+                timeout: 2500,
+                drag: false,
+                transitionIn: 'fadeInUp',
+                transitionOut: 'fadeOutRight',
+            });
+        }
+    }
 </script>
 @endpush
