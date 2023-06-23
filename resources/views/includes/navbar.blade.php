@@ -42,7 +42,8 @@
         </li>
         <li class="dropdown"><a href="#" data-toggle="dropdown"
                 class="nav-link dropdown-toggle nav-link-lg nav-link-user">
-                <img alt="image" src="https://ui-avatars.com/api/?background=FBFBFB&name={{$_auth['name']}}" class="rounded-circle mr-1">
+                <img alt="image" src="https://ui-avatars.com/api/?background=FBFBFB&name={{$_auth['name']}}"
+                    class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">{{$_auth['name']}}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">

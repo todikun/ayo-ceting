@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use App\Traits\DecodeJWT;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 
 class CheckApiToken
 {
@@ -23,7 +24,7 @@ class CheckApiToken
             $payload = $this->decode_jwt_token($token);
             $value = [
                 'token' => $request->cookie('api_token'),
-                'id' => $payload->id ?? null,
+                'id' => $payload->id,
                 'name' => $payload->name,
                 'username' => $payload->username
             ];

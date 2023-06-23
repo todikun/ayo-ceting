@@ -39,18 +39,19 @@ class LoginController extends Controller
             $roleName = $body['data']['user']['role']['role_name'] ?? null;
             $userId = $body['data']['user']['id'] ?? null;
             $name = $body['data']['user']['name'] ?? null;
+            $username = $body['data']['user']['username'];
 
             if ($statusCode === 200 && $roleName === 'Administrator') {
                 $token = $body['data']['token'];
                 $cookie = cookie('api_token', $token, 60 * 24);
 
+                session('user_id', $userId);
+                session('name', $name);
+                session('username', $username);
+
                 return redirect()->route('dashboard')
-                            ->withCookie($cookie)
-                            ->with(
-                                [
-                                    'isFirstLogin' => true,
-                                ]
-                            );
+                            ->withCookie($cookie);
+
             } else if ($statusCode === 200 && $roleName !== 'Administrator'){
                 return redirect()->route('login')->with('error', 'Unauthorized');
             } else {

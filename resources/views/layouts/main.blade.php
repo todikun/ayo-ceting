@@ -116,7 +116,7 @@
         const messageCollection = firestore.collection('message');
 
         const pengaduanId = "{{$pengaduanId ?? ''}}";
-        const loggedUser = "{{$_auth['id']}}";
+        const loggedUser = "{{$_auth['id'] ?? null}}";
         const userIdPengaduan = "{{$userIdPengaduan ?? ''}}";
 
         if (pengaduanId != '') {

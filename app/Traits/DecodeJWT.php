@@ -13,19 +13,22 @@ trait DecodeJWT
     public function decode_jwt_token($token)
     {
         $secretKey = env('JWT_SECRET');
+        $retry = true;
+        do {
+            try {
+                $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
+                $retry = false;
+                return $decoded;
+            } catch (\Exception $e) {
+                //
+            }
+        } while ($retry);
 
-        // untuk decode pertama kali harus di tunda dulu biar gk error
-        if (Session::get('isFirstLogin'))
-        {
-            sleep(2);
-        }
-
-        try {
-            $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
-            return $decoded;
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            return $e->getMessage();
-        }
+        // try {
+        //     JWT::$leeway = 5;
+        //     $decoded = JWT::decode($token, new Key($secretKey, 'HS256'));
+        //     return $decoded;
+        // } catch (\Exception $e) {
+        // }
     }
 }
