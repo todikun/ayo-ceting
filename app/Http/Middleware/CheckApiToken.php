@@ -26,7 +26,8 @@ class CheckApiToken
                 'token' => $token,
                 'id' => $payload->id,
                 'name' => $payload->name,
-                'username' => $payload->username
+                'username' => $payload->username,
+                'iat' => $payload->iat
             ];
     
             view()->share('_auth', $value);

@@ -40,14 +40,17 @@
                 </div>
             </div>
         </li>
-        <li class="dropdown"><a href="#" data-toggle="dropdown"
-                class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+        <li class="dropdown">
+            <a href="#" data-toggle="dropdown" class="nav-link dropdown-toggle nav-link-lg nav-link-user">
                 <img alt="image" src="https://ui-avatars.com/api/?background=FBFBFB&name={{$_auth['name']}}"
                     class="rounded-circle mr-1">
                 <div class="d-sm-none d-lg-inline-block">{{$_auth['name']}}</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right">
-                <div class="dropdown-title">Logged in 5 min ago</div>
+                @php
+                $datetime = \Carbon\Carbon::createFromTimestamp($_auth['iat'])->diffForHumans();
+                @endphp
+                <div class="dropdown-title">Logged in {{$datetime}}</div>
                 <a href="features-profile.html" class="dropdown-item has-icon">
                     <i class="far fa-user"></i> Profile
                 </a>
