@@ -23,7 +23,7 @@ class CheckApiToken
             $token = $request->cookie('api_token');
             $payload = $this->decode_jwt_token($token);
             $value = [
-                'token' => $request->cookie('api_token'),
+                'token' => $token,
                 'id' => $payload->id,
                 'name' => $payload->name,
                 'username' => $payload->username

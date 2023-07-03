@@ -20,6 +20,35 @@ use App\Http\Controllers\{
 |
 */
 
+// Route::get('phpinfo', function() {
+//     return phpinfo();
+// });
+
+// Route::get('firestore', function() {
+//     $testRef = app('firebase.firestore')->database()->collection('Test')->newDocument();
+//     $testRef->set([
+//         'name' => 'todi',
+//         'age' => 24
+//     ]);
+//     return 'ok';
+// });
+
+// Route::get('display', function() {
+//     $firestore = app('firebase.firestore')->database();
+//     $collection = $firestore->collection('Test');
+//     $snapshot = $collection->documents();
+//     $data = [];
+
+//     foreach ($snapshot as $document) {
+//         if ($document->exists()) {
+//             // Dokumen ada
+//             $data[] = $document->data();
+//         } 
+//     }
+
+//     return $data;
+// });
+
 Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('login/proses', [LoginController::class, 'loginProses'])->name('login.proses');
 

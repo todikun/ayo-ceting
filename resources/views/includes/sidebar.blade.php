@@ -16,12 +16,12 @@
             <li class="menu-header">Edukasi</li>
             <li class="nav-item {{Route::is('edukasi.*') ? 'active':''}}">
                 <a href="{{route('edukasi.index')}}" class="nav-link"><i
-                        class="fas fa-fire"></i><span>Edukasi</span></a>
+                        class="fas fa-pencil-ruler"></i><span>Edukasi</span></a>
             </li>
 
             <li class="menu-header">Pengaduan</li>
             <li class="nav-item dropdown {{Route::is('pengaduan.*') ? 'active':''}}">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-notes-medical"></i>
                     <span>Pengaduan</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{Route::is('pengaduan.index') ? 'active':''}}"><a class="nav-link"
@@ -35,14 +35,14 @@
 
             <li class="menu-header">Konsultasi</li>
             <li class="nav-item dropdown {{Route::is('konsultasi.*') ? 'active':''}}">
-                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i>
+                <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-th-list"></i></i>
                     <span>Konsultasi</span></a>
                 <ul class="dropdown-menu">
                     <li class="{{Route::is(['konsultasi.index', 'konsultasi.message']) ? 'active':''}}"><a
                             class="nav-link" href="{{route('konsultasi.index')}}">Konsultasi</a>
                     </li>
-                    <li class="{{Route::is(['konsultasi.riwayat', 'konsultasi.riwayat.detail']) ? 'active':''}}"><a class="nav-link"
-                            href="{{route('konsultasi.riwayat')}}">Riwayat Konsultasi</a>
+                    <li class="{{Route::is(['konsultasi.riwayat', 'konsultasi.riwayat.detail']) ? 'active':''}}"><a
+                            class="nav-link" href="{{route('konsultasi.riwayat')}}">Riwayat Konsultasi</a>
                     </li>
                 </ul>
             </li>
