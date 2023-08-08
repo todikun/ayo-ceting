@@ -4,7 +4,7 @@
             <a href="{{route('dashboard')}}">AYOCETING</a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="{{route('dashboard')}}">**</a>
+            <a href="{{route('dashboard')}}" title="AYOCETING">AC</a>
         </div>
 
         <ul class="sidebar-menu">
@@ -45,6 +45,12 @@
                             class="nav-link" href="{{route('konsultasi.riwayat')}}">Riwayat Konsultasi</a>
                     </li>
                 </ul>
+            </li>
+
+            <li class="menu-header">Data Stunting</li>
+            <li class="nav-item {{Route::is('stunting.*') ? 'active':''}}">
+                <a href="{{route('stunting.index')}}" class="nav-link"><i class="fas fa-pencil-ruler"></i><span>Data
+                        Stunting</span></a>
             </li>
 
         </ul>

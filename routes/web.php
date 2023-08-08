@@ -7,6 +7,7 @@ use App\Http\Controllers\{
     PengaduanController,
     DashboardController,
     KonsultasiController,
+    DataStuntingController,
 };
 
 /*
@@ -53,7 +54,7 @@ Route::get('login', [LoginController::class, 'login'])->name('login');
 Route::post('login/proses', [LoginController::class, 'loginProses'])->name('login.proses');
 
 Route::middleware('checkApiToken')->group(function() {
-    Route::get('/', DashboardController::class)->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::post('logout', [LoginController::class, 'logout'])->name('logout');
     Route::resource('edukasi', EdukasiController::class);
@@ -62,6 +63,10 @@ Route::middleware('checkApiToken')->group(function() {
         Route::get('list', [PengaduanController::class, 'index'])->name('pengaduan.index');
         Route::get('riwayat', [PengaduanController::class, 'riwayat'])->name('pengaduan.riwayat');
         Route::get('show/{id}', [PengaduanController::class, 'show'])->name('pengaduan.show');
+    });
+
+    Route::prefix('stunting')->group(function() {
+        Route::get('list', [DataStuntingController::class, 'index'])->name('stunting.index');
     });
 
     Route::prefix('konsultasi/')->group(function() {
